@@ -24,10 +24,10 @@ const drawerWidth = 240;
 const Layout = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [openCadastro, setOpenCadastro] = useState(false);
+  const [openRegister, setOpenRegister] = useState(false);
 
-  const handleCadastroClick = () => {
-    setOpenCadastro(!openCadastro);
+  const handleRegisterClick = () => {
+    setOpenRegister(!openRegister);
   };
 
   const menuItems = [
@@ -66,21 +66,21 @@ const Layout = ({ children }) => {
             <ListItemText primary="Home" />
           </ListItem>
 
-          {/* Item de Cadastro com Submenu */}
-          <ListItem button onClick={handleCadastroClick}>
+          {/* Item de Register com Submenu */}
+          <ListItem button onClick={handleRegisterClick}>
             <ListItemIcon>
               <HomeIcon />
             </ListItemIcon>
             <ListItemText primary="Cadastro" />
-            {openCadastro ? <ExpandLess /> : <ExpandMore />}
+            {openRegister ? <ExpandLess /> : <ExpandMore />}
           </ListItem>
-          <Collapse in={openCadastro} timeout="auto" unmountOnExit>
+          <Collapse in={openRegister} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
               <ListItem
                 button
                 sx={{ pl: 4 }}
-                onClick={() => navigate("/cadastro-produto")}
-                selected={location.pathname === "/cadastro-produto"}
+                onClick={() => navigate("/Register/Product")}
+                selected={location.pathname === "/Register/Product"}
               >
                 <ListItemIcon>
                   <InventoryIcon />
@@ -90,8 +90,8 @@ const Layout = ({ children }) => {
               <ListItem
                 button
                 sx={{ pl: 4 }}
-                onClick={() => navigate("/cadastro-servico")}
-                selected={location.pathname === "/cadastro-servico"}
+                onClick={() => navigate("/Register/Service")}
+                selected={location.pathname === "/Register/Service"}
               >
                 <ListItemIcon>
                   <BuildIcon />

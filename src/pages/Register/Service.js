@@ -1,7 +1,7 @@
 // src/pages/Register/Service.js
 import React from "react";
 import { Typography, TextField, Button, Container, Box } from "@mui/material";
-import Layout from "../components/Layout";
+import Layout from "../../components/Layout";
 
 const Service = () => {
   const handleSubmit = (e) => {
