@@ -1,16 +1,16 @@
 // src/pages/Lancamentos.js
 import React from "react";
 import { Typography } from "@mui/material";
-import Layout from "../components/Layout";
+import MainMenu from "../components/MainMenu";
 
 const Lancamentos = () => {
   return (
-    <Layout>
+    <MainMenu>
       <Typography variant="h4" gutterBottom>
         Lancamentos
       </Typography>
       {/* Adicione o conteúdo da página aqui */}
-    </Layout>
+    </MainMenu>
   );
 };
 

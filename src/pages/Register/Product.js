@@ -1,19 +1,7 @@
 // src/pages/Register/Product.js
 import React, { useState, useEffect } from "react";
-import {
-  Typography,
-  TextField,
-  Button,
-  Container,
-  Box,
-  Grid,
-  MenuItem,
-  List,
-  ListItem,
-  ListItemText,
-  Paper,
-} from "@mui/material";
-import Layout from "../../components/Layout";
+import { Typography, TextField, Button, Container, Box, Grid, MenuItem, List, ListItem, ListItemText, Paper } from "@mui/material";
+import MainMenu from "../../components/MainMenu";
 
 // Dados de exemplo (substitua por uma chamada à API)
 const produtosSalvos = [
@@ -83,7 +71,7 @@ const Product = () => {
   };
 
   return (
-    <Layout>
+    <MainMenu>
       <Container maxWidth="md">
         <Box sx={{ mt: 4 }}>
           <Typography variant="h4" gutterBottom>
@@ -92,24 +80,13 @@ const Product = () => {
 
           {/* Campo de Pesquisa */}
           <Box sx={{ mb: 4 }}>
-            <TextField
-              label="Pesquisar Produto"
-              value={termoPesquisa}
-              onChange={handlePesquisaChange}
-              fullWidth
-            />
+            <TextField label="Pesquisar Produto" value={termoPesquisa} onChange={handlePesquisaChange} fullWidth />
             {produtosFiltrados.length > 0 && (
               <Paper sx={{ mt: 1, maxHeight: 150, overflow: "auto" }}>
                 <List>
                   {produtosFiltrados.map((produto) => (
-                    <ListItem
-                      button
-                      key={produto.id}
-                      onClick={() => handleSelecionarProduto(produto)}
-                    >
-                      <ListItemText
-                        primary={`${produto.codigo} - ${produto.descricao}`}
-                      />
+                    <ListItem button key={produto.id} onClick={() => handleSelecionarProduto(produto)}>
+                      <ListItemText primary={`${produto.codigo} - ${produto.descricao}`} />
                     </ListItem>
                   ))}
                 </List>
@@ -123,14 +100,7 @@ const Product = () => {
               <Grid container spacing={3}>
                 {/* Coluna 1 */}
                 <Grid item xs={12} md={6}>
-                  <TextField
-                    label="Código"
-                    name="codigo"
-                    value={formData.codigo}
-                    onChange={handleChange}
-                    fullWidth
-                    required
-                  />
+                  <TextField label="Código" name="codigo" value={formData.codigo} onChange={handleChange} fullWidth required />
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <TextField
@@ -196,22 +166,10 @@ const Product = () => {
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>
-                  <TextField
-                    label="Fabricante"
-                    name="fabricante"
-                    value={formData.fabricante}
-                    onChange={handleChange}
-                    fullWidth
-                  />
+                  <TextField label="Fabricante" name="fabricante" value={formData.fabricante} onChange={handleChange} fullWidth />
                 </Grid>
                 <Grid item xs={12} md={6}>
-                  <TextField
-                    label="Modelo"
-                    name="modelo"
-                    value={formData.modelo}
-                    onChange={handleChange}
-                    fullWidth
-                  />
+                  <TextField label="Modelo" name="modelo" value={formData.modelo} onChange={handleChange} fullWidth />
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <TextField
@@ -223,14 +181,7 @@ const Product = () => {
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>
-                  <TextField
-                    label="Inativo"
-                    name="inativo"
-                    value={formData.inativo}
-                    onChange={handleChange}
-                    fullWidth
-                    select
-                  >
+                  <TextField label="Inativo" name="inativo" value={formData.inativo} onChange={handleChange} fullWidth select>
                     <MenuItem value={false}>Não</MenuItem>
                     <MenuItem value={true}>Sim</MenuItem>
                   </TextField>
@@ -247,7 +198,7 @@ const Product = () => {
           </Paper>
         </Box>
       </Container>
-    </Layout>
+    </MainMenu>
   );
 };
 

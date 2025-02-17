@@ -1,23 +1,29 @@
-// src/App.js
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
-import { AuthProvider, useAuth } from "./context/AuthContext";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider, logout, useAuth } from "./context/AuthContext";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
-import RegisterProduct from "./pages/Register/Product"; // Atualizado
-import RegisterService from "./pages/Register/Service"; // Atualizado
+import RegisterProduct from "./pages/Register/Product";
+import RegisterService from "./pages/Register/Service";
 import Lancamentos from "./pages/Lancamentos";
-import Relatorios from "./pages/Relatorios";
-import RelatorioEstoque from "./pages/RelatorioEstoque";
-import RelatorioMovimentacao from "./pages/RelatorioMovimentacao";
+import ReportStock from "./pages/Reports/Stock";
+import ReportGoodsMovementHistory from "./pages/Reports/GoodsMovementHistory";
 
+// Proteção de Rotas - Verifica se o usuário está autenticado
 const PrivateRoute = ({ children }) => {
-  const { user } = useAuth();
-  return user ? children : <Navigate to="/login" />;
+  const { user } = useAuth(); // Pega usuário do contexto
+
+  const isAuthenticated = user || localStorage.getItem("user"); // Persistência no LocalStorage
+
+  return isAuthenticated ? children : <Navigate to="/login" />;
+};
+
+// Página de Logout
+const Logout = () => {
+  // Remove o usuário da autenticação
+  <Login.logout />;
+
+  // Redireciona para login
+  return <Navigate to="/login" />;
 };
 
 function App() {
@@ -25,7 +31,11 @@ function App() {
     <AuthProvider>
       <Router>
         <Routes>
+          {/* Página de Login */}
           <Route path="/login" element={<Login />} />
+          {/* Página de Logout */}
+          <Route path="/logout" element={<Logout />} />
+          {/* Rotas Privadas */}
           <Route
             path="/"
             element={
@@ -59,16 +69,22 @@ function App() {
             }
           />
           <Route
-            path="/relatorios"
+            path="/Report/Stock"
             element={
               <PrivateRoute>
-                <Relatorios />
+                <ReportStock />
               </PrivateRoute>
             }
-          >
-            <Route path="estoque" element={<RelatorioEstoque />} />
-            <Route path="movimentacao" element={<RelatorioMovimentacao />} />
-          </Route>
+          />{" "}
+          <Route
+            path="/Report/GoodsMovementHistory"
+            element={
+              <PrivateRoute>
+                <ReportGoodsMovementHistory />
+              </PrivateRoute>
+            }
+          />
+          {/* Redireciona qualquer URL inválida para a Home */}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Router>

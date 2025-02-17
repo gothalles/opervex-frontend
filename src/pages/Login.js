@@ -7,7 +7,7 @@ import { TextField, Button, Container, Box, Typography } from "@mui/material";
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { login, redirectPath } = useContext(AuthContext); // Adicionado redirectPath
+  const { login, logout, redirectPath } = useContext(AuthContext); // Adicionado redirectPath
   const navigate = useNavigate();
 
   const handleLogin = () => {
@@ -32,13 +32,7 @@ const Login = () => {
         <Typography variant="h4" gutterBottom>
           Login
         </Typography>
-        <TextField
-          label="Usuário"
-          fullWidth
-          margin="normal"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
+        <TextField label="Usuário" fullWidth margin="normal" value={username} onChange={(e) => setUsername(e.target.value)} />
         <TextField
           label="Senha"
           type="password"
@@ -47,12 +41,7 @@ const Login = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleLogin}
-          sx={{ mt: 3 }}
-        >
+        <Button variant="contained" color="primary" onClick={handleLogin} sx={{ mt: 3 }}>
           Entrar
         </Button>
       </Box>
