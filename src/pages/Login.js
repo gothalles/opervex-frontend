@@ -13,6 +13,8 @@ const Login = () => {
   const handleLogin = async () => {
     const success = await login(username, password); // ✅ Aguarda login
 
+    console.log(success);
+
     if (success) {
       navigate(redirectPath || "/"); // ✅ Redireciona corretamente
     } else {
