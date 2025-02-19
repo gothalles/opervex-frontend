@@ -22,10 +22,7 @@
     "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
-<<<<<<< HEAD
     "react-number-format": "^5.4.3",
-=======
->>>>>>> c1e0ec64fd42bde17ad8c1d101c9becfeb5729c9
     "react-router-dom": "^7.1.5",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4",
