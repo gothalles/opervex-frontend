@@ -1,4 +1,4 @@
-// pages/Reports/Stock.js
+// pages/Reports/SockSerial.js
 import React from "react";
 import { Typography } from "@mui/material";
 import MainMenu from "../../components/MainMenu";
@@ -8,13 +8,13 @@ const Stock = () => {
   return (
     <MainMenu>
       <Typography variant="h4" gutterBottom>
-        Relatório de Estoque
+        Relatório de Estoque Serial
       </Typography>
 
       <DynamicReport
-        reportName={"reporStock"}
-        urlData={`${process.env.REACT_APP_API_URL}/Report/Stock`}
-        urlSchema={`${process.env.REACT_APP_API_URL}/Report/Stock/Schema`}
+        reportName={"reporSockSerial"}
+        urlData={`${process.env.REACT_APP_API_URL}/Report/StockSerial`}
+        urlSchema={`${process.env.REACT_APP_API_URL}/Report/StockSerial/Schema`}
       />
     </MainMenu>
   );

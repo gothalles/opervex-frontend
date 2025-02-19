@@ -1,17 +1,18 @@
-import * as React from "react";
+import React from "react";
 import PropTypes from "prop-types";
-import Box from "@mui/material/Box";
+import { useNavigate, useLocation } from "react-router-dom";
+import SidebarFooterAccount from "./SidebarFooterAccount";
 
-import { Paper, createTheme } from "@mui/material";
+import { Box, Paper, createTheme, Stack, Divider } from "@mui/material";
 
-import { AppProvider } from "@toolpad/core/AppProvider";
-import { DashboardLayout } from "@toolpad/core/DashboardLayout";
+import { AppProvider, DashboardLayout, AccountPreview } from "@toolpad/core";
 
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import HomeIcon from "@mui/icons-material/Home";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import SettingsIcon from "@mui/icons-material/Settings";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import DescriptionIcon from "@mui/icons-material/Description";
-import { useNavigate, useLocation } from "react-router-dom";
 
 const NAVIGATION = [
   {
@@ -25,15 +26,15 @@ const NAVIGATION = [
   },
 
   {
-    segment: "dashboard",
+    segment: "Dashboard",
     title: "Dashboard",
     icon: <DashboardIcon />,
   },
-  //{
-  //  segment: "orders",
-  //  title: "Orders",
-  //  icon: <ShoppingCartIcon />,
-  //},
+  {
+    segment: "Register/Sales",
+    title: "Vendas",
+    icon: <ShoppingCartIcon />,
+  },
   {
     kind: "divider",
   },
@@ -43,18 +44,52 @@ const NAVIGATION = [
   },
   {
     segment: "Report",
-    title: "Reports",
+    title: "Relatórios",
     icon: <BarChartIcon />,
     children: [
+      {
+        segment: "",
+        title: "Movimentação",
+        icon: <BarChartIcon />,
+        children: [
+          {
+            segment: "GoodsMovementHistory",
+            title: "Serial",
+            icon: <DescriptionIcon />,
+          },
+          {
+            segment: "GoodsMovementHistoryFull",
+            title: "Completo",
+            icon: <DescriptionIcon />,
+          },
+        ],
+      },
       {
         segment: "Stock",
         title: "Estoque",
         icon: <DescriptionIcon />,
       },
       {
-        segment: "GoodsMovementHistory",
-        title: "Movimentação - Serial",
+        segment: "StockSerial",
+        title: "Estoque Serial",
         icon: <DescriptionIcon />,
+      },
+      {
+        segment: "StockSerialDays",
+        title: "Serial - Dias em Estoque",
+        icon: <DescriptionIcon />,
+      },
+    ],
+  },
+  {
+    segment: "System",
+    title: "Sistema",
+    icon: <SettingsIcon />,
+    children: [
+      {
+        segment: "AccessProfile",
+        title: "Acessos",
+        icon: <BarChartIcon />,
       },
     ],
   },
@@ -76,7 +111,30 @@ const demoTheme = createTheme({
   },
 });
 
-function PageContent({ pathname, router }) {
+function AccountSidebarPreview(props) {
+  const { handleClick, open, mini } = props;
+  return (
+    <Stack direction="column" p={0}>
+      <Divider />
+      <AccountPreview variant={mini ? "condensed" : "expanded"} handleClick={handleClick} open={open} />
+    </Stack>
+  );
+}
+
+AccountSidebarPreview.propTypes = {
+  /**
+   * The handler used when the preview is expanded
+   */
+  handleClick: PropTypes.func,
+  mini: PropTypes.bool.isRequired,
+  /**
+   * The state of the Account popover
+   * @default false
+   */
+  open: PropTypes.bool,
+};
+
+function PageContent({ router }) {
   return (
     <Box
       sx={{
@@ -87,8 +145,6 @@ function PageContent({ pathname, router }) {
         textAlign: "center",
       }}
     >
-      {/*<Typography>Dashboard content for {pathname}</Typography> */}
-
       <Paper sx={{ width: "100%", padding: 1 }}>{router}</Paper>
     </Box>
   );
@@ -101,7 +157,6 @@ PageContent.propTypes = {
 function MainMenu(props) {
   const navigate = useNavigate(); // Hook de navegação
   const location = useLocation();
-
   const { window } = props;
   const { children } = props;
   const router = {};
@@ -109,46 +164,23 @@ function MainMenu(props) {
   router.navigate = navigate;
   router.pathname = location.pathname;
 
-  const [session, setSession] = React.useState({
-    user: {
-      name: "Bharat Kashyap",
-      email: "bharatkashyap@outlook.com",
-      image: "https://avatars.githubusercontent.com/u/19550456",
-    },
-  });
-
-  const authentication = React.useMemo(() => {
-    return {
-      signIn: () => {
-        setSession({
-          user: {
-            name: "Bharat Kashyap",
-            email: "bharatkashyap@outlook.com",
-            image: "https://avatars.githubusercontent.com/u/19550456",
-          },
-        });
-      },
-      signOut: () => {
-        setSession(null);
-        navigate("/logout");
-      },
-    };
-  }, []);
-
   // Remove this const when copying and pasting into your project.
   const demoWindow = window !== undefined ? window() : undefined;
 
   return (
     // preview-start
     <AppProvider
-      session={session}
-      authentication={authentication}
       navigation={NAVIGATION}
       router={router}
       theme={demoTheme}
       window={demoWindow}
+      branding={{
+        logo: <img src="../../logo_sem_fundo.png" />,
+        title: "Opervex",
+        homeUrl: "/toolpad/core/introduction",
+      }}
     >
-      <DashboardLayout>
+      <DashboardLayout slots={{ toolbarAccount: () => null, sidebarFooter: SidebarFooterAccount }}>
         <PageContent pathname={router.pathname} router={children} />
       </DashboardLayout>
     </AppProvider>

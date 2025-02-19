@@ -9,7 +9,7 @@ const LayoutConfigMenu = ({ layout, setLayout, layoutName, urlSchema }) => {
   const { user } = useAuth(); // Pega usuário do contexto
   const [anchorLayout, setAnchorLayout] = useState(null);
   const openLayout = Boolean(anchorLayout);
-  const [idLayoutUser, setIdLayoutUser] = useState("");
+  const [idLayoutUser, setIdLayoutUser] = useState(null);
   const [tempLayout, setTempLayout] = useState([]); // Estado temporário
 
   useEffect(() => {
@@ -18,22 +18,15 @@ const LayoutConfigMenu = ({ layout, setLayout, layoutName, urlSchema }) => {
 
       setIdLayoutUser(layoutName + "_" + user.username);
 
-      let savedLayout = await getLayoutUser();
-      savedLayout = savedLayout ? JSON.parse(savedLayout) : null;
-
-      if (!savedLayout) {
-        savedLayout = await getLayoutDefault(); // Aguarde o carregamento
-      }
-
-      setLayout(savedLayout || []);
-      setTempLayout(savedLayout || []); // Também define o layout temporário
+      await getLayout();
     };
 
     fetchData();
-  }, [user]);
+  }, [user, idLayoutUser]);
 
-  const handleOpenLayout = () => {
-    setAnchorLayout(true);
+  const handleOpenLayout = (event) => {
+    //setAnchorLayout(true);
+    setAnchorLayout(event.currentTarget);
   };
 
   const handleCloseLayout = () => {
@@ -49,13 +42,50 @@ const LayoutConfigMenu = ({ layout, setLayout, layoutName, urlSchema }) => {
     //localStorage.setItem("reportLayout", JSON.stringify(result));
   };
 
-  const handleSaveLayout = () => {
+  // Save Layout User
+  const saveLayoutUser = async () => {
+    const dataBody = { id: idLayoutUser, items: tempLayout };
+
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/utils/layouts/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify(dataBody),
+      });
+
+      await response.json();
+    } catch (err) {
+      console.log(err);
+    } finally {
+    }
+  };
+
+  const handleSaveLayout = async () => {
     setLayout(tempLayout);
+
+    await saveLayoutUser();
+
     handleCloseLayout();
   };
 
+  const getLayout = async () => {
+    var savedLayout = await getLayoutUser();
+
+    savedLayout = savedLayout ? JSON.parse(savedLayout) : null;
+
+    if (!savedLayout) {
+      savedLayout = await getLayoutDefault(); // Aguarde o carregamento
+    }
+
+    setLayout(savedLayout || []);
+    setTempLayout(savedLayout || []); // Também define o layout temporário
+  };
+
   const getLayoutUser = async () => {
-    if (!idLayoutUser) return;
+    if (!user || !idLayoutUser) return null;
 
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/utils/layouts/${idLayoutUser}`, {
@@ -68,7 +98,7 @@ const LayoutConfigMenu = ({ layout, setLayout, layoutName, urlSchema }) => {
 
       const result = await response.json();
 
-      return result;
+      return JSON.stringify(result.items);
     } catch (err) {
       //console.log("Erro ao carregar os dados:", err);
       return null;
@@ -76,7 +106,7 @@ const LayoutConfigMenu = ({ layout, setLayout, layoutName, urlSchema }) => {
   };
 
   const getLayoutDefault = async () => {
-    if (!user) return null;
+    if (!user || !idLayoutUser) return null;
 
     try {
       const response = await fetch(urlSchema, {
@@ -88,6 +118,7 @@ const LayoutConfigMenu = ({ layout, setLayout, layoutName, urlSchema }) => {
       });
 
       const result = await response.json();
+
       return result;
     } catch (err) {
       console.log("Erro ao carregar os dados:\n\n", err);
@@ -126,7 +157,7 @@ const LayoutConfigMenu = ({ layout, setLayout, layoutName, urlSchema }) => {
                 {tempLayout.map((col, index) => (
                   <Draggable key={col.key} draggableId={col.key} index={index}>
                     {(provided) => (
-                      <MenuItem ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                      <MenuItem ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} key={col.key}>
                         <FormControlLabel
                           control={<Checkbox checked={col.visible} onChange={() => handleToggleColumn(col.key)} />}
                           label={col.label}
