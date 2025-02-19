@@ -30,6 +30,8 @@ export const AuthProvider = ({ children }) => {
         password,
       });
 
+      console.log(data);
+
       if (data.message === "success") {
         const userData = {
           username: data.username,
