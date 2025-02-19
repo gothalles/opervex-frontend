@@ -1,4 +1,4 @@
-// pages/GoodsMovementHistory.js
+// pages/Reports/GoodsMovementHistory.js
 import React from "react";
 import { Typography } from "@mui/material";
 import MainMenu from "../../components/MainMenu";
@@ -12,7 +12,7 @@ const GoodsMovementHistory = () => {
       </Typography>
 
       <DynamicReport
-        reportName={"reportGoodsMoviment"}
+        reportName={"reporGoodsMovementHistory"}
         urlData={`${process.env.REACT_APP_API_URL}/Report/GoodsMovementHistory`}
         urlSchema={`${process.env.REACT_APP_API_URL}/Report/GoodsMovementHistory/Schema`}
       />

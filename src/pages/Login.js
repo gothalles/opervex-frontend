@@ -7,13 +7,14 @@ import { TextField, Button, Container, Box, Typography } from "@mui/material";
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { login, logout, redirectPath } = useContext(AuthContext); // Adicionado redirectPath
+  const { login, redirectPath } = useContext(AuthContext); // Adicionando setRedirectPath
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    if (login(username, password)) {
-      // Redireciona para a URL salva ou para a página inicial
-      navigate(redirectPath || "/");
+  const handleLogin = async () => {
+    const success = await login(username, password); // ✅ Aguarda login
+
+    if (success) {
+      navigate(redirectPath || "/"); // ✅ Redireciona corretamente
     } else {
       alert("Usuário ou senha incorretos!");
     }
