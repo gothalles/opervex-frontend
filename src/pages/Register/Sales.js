@@ -99,7 +99,6 @@ export default function Sales() {
 
   const onSubmit = (data) => {
     setLoading(true);
-    //console.log("Dados da Venda:", { ...data, valorPlano, valorNovo });
 
     dados.push({ ...data, code: dados.length + 1, valorPlano, valorNovo });
 
