@@ -22,7 +22,7 @@ const PrivateRoute = ({ children }) => {
 
   // Se ainda está carregando, mostra um carregamento (pode ser uma tela de loading ou nada)
   if (loading) {
-    return <div>Carregando...</div>; // Aqui você pode mostrar um spinner ou algo mais adequado
+    return <div>Carregando..</div>; // Aqui você pode mostrar um spinner ou algo mais adequado
   }
 
   // Verifica se o usuário está autenticado, se não, redireciona para login
