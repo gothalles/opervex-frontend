@@ -3,12 +3,88 @@ import { useForm, useWatch } from "react-hook-form";
 import { Typography, TextField, MenuItem, Button, Box, Paper, Grid } from "@mui/material";
 import MainMenu from "../../components/MainMenu";
 import CurrencyInput from "../../components/CurrencyInput";
+import DynamicTable from "../../components/DynamicTable";
 
 export default function Sales() {
   const { register, handleSubmit, reset, control } = useForm();
   const [loading, setLoading] = useState(false);
   const [valorPlano, setValorPlano] = useState("");
   const [valorNovo, setValorNovo] = useState("");
+  const [dados, setDados] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const layout = [
+    {
+      key: "code",
+      label: "Código",
+      type: "number",
+      visible: true,
+      filterOptions: ["=", "<>", ">", ">=", "<", "<="],
+    },
+    {
+      key: "dataVenda",
+      label: "Data da Venda",
+      type: "date",
+      visible: true,
+      filterOptions: ["=", "<>", ">", ">=", "<", "<="],
+    },
+    {
+      key: "nomeCliente",
+      label: "Nome do Cliente",
+      type: "string",
+      visible: true,
+      filterOptions: ["equal", "contain", "startWith", "endWith"],
+    },
+    {
+      key: "protocolo",
+      label: "Protocolo",
+      type: "string",
+      visible: true,
+      filterOptions: ["equal", "contain", "startWith", "endWith"],
+    },
+    {
+      key: "servico",
+      label: "Serviço",
+      type: "string",
+      visible: true,
+      filterOptions: ["equal", "contain", "startWith", "endWith"],
+    },
+    {
+      key: "valorPlano",
+      label: "Valor Plano",
+      type: "currency",
+      visible: true,
+      filterOptions: ["equal", "contain", "startWith", "endWith"],
+    },
+    {
+      key: "valorNovo",
+      label: "Valor Novo",
+      type: "currency",
+      visible: true,
+      filterOptions: ["equal", "contain", "startWith", "endWith"],
+    },
+    {
+      key: "vendedor",
+      label: "Vendedor",
+      type: "string",
+      visible: true,
+      filterOptions: ["equal", "contain", "startWith", "endWith"],
+    },
+    {
+      key: "qtdLinhasMoveis",
+      label: "Linhas Móveis",
+      type: "int",
+      visible: true,
+      filterOptions: ["=", "<>", ">", ">=", "<", "<="],
+    },
+    {
+      key: "operadora",
+      label: "Operadora",
+      type: "string",
+      visible: true,
+      filterOptions: ["equal", "contain", "startWith", "endWith"],
+    },
+  ];
 
   const vendedores = ["João Silva", "Maria Oliveira", "Carlos Souza"];
   const servicos = ["Plano Básico", "Plano Premium", "Plano Empresarial"];
@@ -24,6 +100,9 @@ export default function Sales() {
   const onSubmit = (data) => {
     setLoading(true);
     //console.log("Dados da Venda:", { ...data, valorPlano, valorNovo });
+
+    dados.push({ ...data, code: dados.length + 1, valorPlano, valorNovo });
+
     setTimeout(() => {
       setLoading(false);
       reset();
@@ -122,6 +201,17 @@ export default function Sales() {
             </Grid>
           </form>
         </Paper>
+      </Box>
+      <Box>
+        {/* Tabela Dinâmica */}
+        <DynamicTable
+          layout={layout || []}
+          dados={dados || []}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          setPage={setPage}
+          setRowsPerPage={setRowsPerPage}
+        />
       </Box>
     </MainMenu>
   );
