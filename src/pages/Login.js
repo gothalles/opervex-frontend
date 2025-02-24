@@ -5,13 +5,17 @@ import { AuthContext } from "../context/AuthContext";
 import { TextField, Button, Container, Box, Typography } from "@mui/material";
 
 const Login = () => {
+  const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { login, redirectPath } = useContext(AuthContext); // Adicionando setRedirectPath
   const navigate = useNavigate();
 
   const handleLogin = async () => {
+    setLoading(true);
+
     const success = await login(username, password); // ✅ Aguarda login
+    setLoading(false);
 
     if (success) {
       navigate(redirectPath || "/"); // ✅ Redireciona corretamente
@@ -43,7 +47,7 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
         />
         <Button variant="contained" color="primary" onClick={handleLogin} sx={{ mt: 3 }}>
-          Entrar
+          {loading ? "Carregando..." : "Entrar"}
         </Button>
       </Box>
     </Container>

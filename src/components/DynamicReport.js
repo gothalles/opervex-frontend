@@ -6,7 +6,7 @@ import FilterDialog from "./FilterDialog";
 import ExportData from "./ExportData";
 import { Box } from "@mui/material";
 
-const DynamicReport = ({ reportName, urlData, urlSchema }) => {
+const DynamicReport = ({ reportName, urlData, urlSchema, links }) => {
   const [dados, setDados] = useState([]);
   const [layout, setLayout] = useState(null);
   const [page, setPage] = useState(0);
@@ -28,6 +28,7 @@ const DynamicReport = ({ reportName, urlData, urlSchema }) => {
         layout={layout || []}
         dados={dados || []}
         page={page}
+        links={links || []}
         rowsPerPage={rowsPerPage}
         setPage={setPage}
         setRowsPerPage={setRowsPerPage}

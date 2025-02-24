@@ -36,6 +36,11 @@ const NAVIGATION = [
     icon: <ShoppingCartIcon />,
   },
   {
+    segment: "Register/ServiceOrder",
+    title: "Ordem de Serviço",
+    icon: <ShoppingCartIcon />,
+  },
+  {
     kind: "divider",
   },
   {
@@ -48,21 +53,14 @@ const NAVIGATION = [
     icon: <BarChartIcon />,
     children: [
       {
-        segment: "",
+        segment: "GoodsMovement",
         title: "Movimentação",
-        icon: <BarChartIcon />,
-        children: [
-          {
-            segment: "GoodsMovementHistory",
-            title: "Serial",
-            icon: <DescriptionIcon />,
-          },
-          {
-            segment: "GoodsMovementHistoryFull",
-            title: "Completo",
-            icon: <DescriptionIcon />,
-          },
-        ],
+        icon: <DescriptionIcon />,
+      },
+      {
+        segment: "ServiceOrder",
+        title: "Ordem de Serviço",
+        icon: <DescriptionIcon />,
       },
       {
         segment: "Stock",
