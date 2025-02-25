@@ -47,7 +47,7 @@ const LayoutConfigMenu = ({ layout, setLayout, layoutName, urlSchema }) => {
     const dataBody = { id: idLayoutUser, items: tempLayout };
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/utils/layouts/`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/System/Layouts/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -88,7 +88,7 @@ const LayoutConfigMenu = ({ layout, setLayout, layoutName, urlSchema }) => {
     if (!user || !idLayoutUser) return null;
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/utils/layouts/${idLayoutUser}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/System/Layouts/${idLayoutUser}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

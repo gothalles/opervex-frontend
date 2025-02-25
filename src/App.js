@@ -19,8 +19,8 @@ import ReportGoodsMovement from "./pages/Reports/GoodsMovement";
 import ReportServiceOrder from "./pages/Reports/ServiceOrder";
 
 // Proteção de Rotas - Verifica se o usuário está autenticado
-const PrivateRoute = ({ children }) => {
-  const { user, loading } = useAuth(); // Pega usuário e loading do contexto
+const PrivateRoute = ({ children, requiredRoles }) => {
+  const { user, roles, loading } = useAuth(); // Pega usuário e loading do contexto
 
   // Se ainda está carregando, mostra um carregamento (pode ser uma tela de loading ou nada)
   if (loading) {
@@ -28,8 +28,13 @@ const PrivateRoute = ({ children }) => {
   }
 
   // Verifica se o usuário está autenticado, se não, redireciona para login
-  if (!user) {
-    return <Navigate to="/login" />;
+  if (!user) return <Navigate to="/login" />;
+
+  // Verifica se o usuário tem pelo menos um dos papéis necessários
+  if (requiredRoles) {
+    const allowed = roles.findIndex((x) => x.command === requiredRoles) == -1 ? false : true;
+
+    if (!allowed) return <Navigate to="/" />;
   }
 
   return children;
@@ -44,8 +49,8 @@ const Logout = () => {
   return <Navigate to="/login" />;
 };
 
-const AddPrivateRoute = (path, page) => {
-  return <Route path={path} element={<PrivateRoute>{page}</PrivateRoute>} />;
+const AddPrivateRoute = (path, page, requiredRoles) => {
+  return <Route path={path} element={<PrivateRoute requiredRoles={requiredRoles}>{page}</PrivateRoute>} />;
 };
 
 function App() {
@@ -63,18 +68,18 @@ function App() {
           {AddPrivateRoute("/", <Home />)}
           {AddPrivateRoute("/ExcelUploader", <ExcelUploader />)}
           {AddPrivateRoute("/Dashboard", <Dashboard />)}
-          {AddPrivateRoute("/System/AccessProfile", <AccessProfile />)}
+          {AddPrivateRoute("/System/AccessProfile", <AccessProfile />, "USER_PROFILE")}
 
           {AddPrivateRoute("/Register/Product", <RegisterProduct />)}
           {AddPrivateRoute("/Register/Sales", <RegisterSales />)}
           {AddPrivateRoute("/Register/ServiceOrder", <RegisterServiceOrder />)}
           {AddPrivateRoute("/Register/ServiceOrder/:id", <RegisterServiceOrder />)}
 
-          {AddPrivateRoute("/Report/Stock", <ReportStock />)}
-          {AddPrivateRoute("/Report/StockSerial", <ReportStockSerial />)}
-          {AddPrivateRoute("/Report/StockSerialDays", <ReportStockSerialDays />)}
-          {AddPrivateRoute("/Report/GoodsMovement", <ReportGoodsMovement />)}
-          {AddPrivateRoute("/Report/ServiceOrder", <ReportServiceOrder />)}
+          {AddPrivateRoute("/Report/Stock", <ReportStock />, "REPORT_STOCK")}
+          {AddPrivateRoute("/Report/StockSerial", <ReportStockSerial />, "REPORT_STOCK_SERIAL")}
+          {AddPrivateRoute("/Report/StockSerialDays", <ReportStockSerialDays />, "REPORT_SERIAL_DAYS_DEPOSIT")}
+          {AddPrivateRoute("/Report/GoodsMovement", <ReportGoodsMovement />, "REPORT_GOODS_MOVEMENT")}
+          {AddPrivateRoute("/Report/ServiceOrder", <ReportServiceOrder />, "REPORT_SERVICE_ORDER")}
 
           {/* Redireciona qualquer URL inválida para a Home */}
           <Route path="*" element={<Navigate to="/" />} />

@@ -13,8 +13,8 @@ const GoodsMovement = () => {
 
       <DynamicReport
         reportName={"reporGoodsMovement"}
-        urlData={`${process.env.REACT_APP_API_URL}/Report/GoodsMovementHistoryFull`}
-        urlSchema={`${process.env.REACT_APP_API_URL}/Report/GoodsMovementHistoryFull/Schema`}
+        urlData={`${process.env.REACT_APP_API_URL}/Report/GoodsMovement`}
+        urlSchema={`${process.env.REACT_APP_API_URL}/Report/GoodsMovement/Schema`}
       />
     </MainMenu>
   );

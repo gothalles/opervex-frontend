@@ -52,7 +52,7 @@ const ServiceOrder = () => {
     }
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/ServiceOrder/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/ServiceManagement/ServiceOrder/${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -406,7 +406,7 @@ const ServiceOrder = () => {
                   <TableRow>
                     <TableCell>{service.item}</TableCell>
                     <TableCell>{service.codeItem}</TableCell>
-                    <TableCell>FTTH PJ - INSTALAÇÃO</TableCell>
+                    <TableCell>{service.description}</TableCell>
                     <TableCell>{service.quantity}</TableCell>
                     <TableCell>
                       {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(service.price)}
@@ -450,7 +450,7 @@ const ServiceOrder = () => {
                   <TableRow>
                     <TableCell>{product.item}</TableCell>
                     <TableCell>{product.codeItem}</TableCell>
-                    <TableCell>FTTH PJ - INSTALAÇÃO</TableCell>
+                    <TableCell>{product.description}</TableCell>
                     <TableCell>{product.quantity}</TableCell>
                     <TableCell>{product.unitMeasurement}</TableCell>
                     <TableCell>{product.serialNumber}</TableCell>

@@ -14,17 +14,28 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import DescriptionIcon from "@mui/icons-material/Description";
 
-const NAVIGATION = [
-  {
-    kind: "header",
-    title: "Main items",
-  },
+import { useAuth } from "../context/AuthContext";
+
+// Função para filtrar os itens de navegação com base nos roles do usuário
+const filterNavigation = (navigation, roles) => {
+  return navigation.reduce((filtered, item) => {
+    if (item.command && !roles.some((x) => x.command === item.command)) return filtered; // Se o comando não estiver nos roles, não adiciona o item
+
+    // Se houver filhos, aplica o filtro também
+    if (item.children) item.children = filterNavigation(item.children, roles);
+
+    filtered.push(item);
+
+    return filtered;
+  }, []);
+};
+
+var NAVIGATION = [
   {
     segment: "",
     title: "Home",
     icon: <HomeIcon />,
   },
-
   {
     segment: "Dashboard",
     title: "Dashboard",
@@ -45,39 +56,52 @@ const NAVIGATION = [
   },
   {
     kind: "header",
-    title: "Analytics",
+    title: "Analitico",
   },
   {
     segment: "Report",
     title: "Relatórios",
     icon: <BarChartIcon />,
+    command: "REPORTS",
     children: [
       {
         segment: "GoodsMovement",
         title: "Movimentação",
         icon: <DescriptionIcon />,
+        command: "REPORT_GOODS_MOVEMENT",
       },
       {
         segment: "ServiceOrder",
         title: "Ordem de Serviço",
         icon: <DescriptionIcon />,
+        command: "REPORT_SERVICE_ORDER",
       },
       {
         segment: "Stock",
         title: "Estoque",
         icon: <DescriptionIcon />,
+        command: "REPORT_STOCK",
       },
       {
         segment: "StockSerial",
         title: "Estoque Serial",
         icon: <DescriptionIcon />,
+        command: "REPORT_STOCK_SERIAL",
       },
       {
         segment: "StockSerialDays",
         title: "Serial - Dias em Estoque",
         icon: <DescriptionIcon />,
+        command: "REPORT_SERIAL_DAYS_DEPOSIT",
       },
     ],
+  },
+  {
+    kind: "divider",
+  },
+  {
+    kind: "header",
+    title: "Configuração",
   },
   {
     segment: "System",
@@ -88,6 +112,7 @@ const NAVIGATION = [
         segment: "AccessProfile",
         title: "Acessos",
         icon: <BarChartIcon />,
+        command: "USER_PROFILE",
       },
     ],
   },
@@ -153,11 +178,15 @@ PageContent.propTypes = {
 };
 
 function MainMenu(props) {
+  const { roles } = useAuth(); // Pega usuário e loading do contexto
   const navigate = useNavigate(); // Hook de navegação
   const location = useLocation();
   const { window } = props;
   const { children } = props;
   const router = {};
+
+  // Filtra a navegação com base nos roles do usuário
+  const filteredNavigation = filterNavigation(NAVIGATION, roles);
 
   router.navigate = navigate;
   router.pathname = location.pathname;
@@ -168,7 +197,7 @@ function MainMenu(props) {
   return (
     // preview-start
     <AppProvider
-      navigation={NAVIGATION}
+      navigation={filteredNavigation}
       router={router}
       theme={demoTheme}
       window={demoWindow}
