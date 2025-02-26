@@ -119,6 +119,8 @@ const ExcelUploader = () => {
 
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
+
+      // Convertendo para JSON
       const parsedData = XLSX.utils.sheet_to_json(sheet, { raw: false });
 
       const dataResult = [];
@@ -134,23 +136,29 @@ const ExcelUploader = () => {
 
           if (index) {
             if (layoutItem.type === "date") {
-              const dateInfo = XLSX.SSF.parse_date_code(arrayRow[index]);
+              if (typeof arrayRow[index] === "number" || !String(arrayRow[index]).includes("/")) {
+                const dateInfo = XLSX.SSF.parse_date_code(arrayRow[index]);
 
-              if (dateInfo.D != 0) {
-                // Criar um objeto Date manualmente
-                const jsDate = new Date(
-                  dateInfo.y, // Ano
-                  dateInfo.m - 1, // Mês (subtrair 1 porque JavaScript usa 0-11 para meses)
-                  dateInfo.d,
-                  Math.floor(dateInfo.T / 3600000), // Dia // Horas
-                  Math.floor((dateInfo.T % 3600000) / 60000), // Minutos
-                  Math.floor((dateInfo.T % 60000) / 1000) // Segundos
-                );
+                if (dateInfo.D != 0) {
+                  // Criar um objeto Date manualmente
+                  const jsDate = new Date(
+                    dateInfo.y, // Ano
+                    dateInfo.m - 1, // Mês (subtrair 1 porque JavaScript usa 0-11 para meses)
+                    dateInfo.d,
+                    Math.floor(dateInfo.T / 3600000), // Dia // Horas
+                    Math.floor((dateInfo.T % 3600000) / 60000), // Minutos
+                    Math.floor((dateInfo.T % 60000) / 1000) // Segundos
+                  );
 
-                dataRow[layoutItem.key] = jsDate.toISOString().replace("T", " ").split(".")[0];
+                  dataRow[layoutItem.key] = jsDate.toISOString().replace("T", " ").split(".")[0];
+                }
+              } else {
+                dataRow[layoutItem.key] = arrayRow[index];
               }
             } else if (layoutItem.type === "boolean") {
               dataRow[layoutItem.key] = arrayRow[index] === "Sim" || arrayRow[index] === "Yes" ? true : false;
+            } else if (layoutItem.type === "currency") {
+              dataRow[layoutItem.key] = String(arrayRow[index]).replace(",", "");
             } else {
               dataRow[layoutItem.key] = arrayRow[index];
             }
@@ -168,7 +176,6 @@ const ExcelUploader = () => {
   };
 
   const handleSave = async (event) => {
-    console.log(JSON.stringify(data[0]));
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/import/AnalyticSummary`, {
         method: "POST",
