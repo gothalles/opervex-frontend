@@ -125,17 +125,17 @@ const ExcelUploader = () => {
 
       const dataResult = [];
 
-      parsedData.forEach((item) => {
+      parsedData.forEach((item, index) => {
         const arrayColl = Object.keys(item);
         const arrayRow = Object.values(item);
         const dataRow = {};
         const valueRow = null;
 
         layout.forEach((layoutItem) => {
-          const index = arrayColl.findIndex((item) => item === layoutItem.label);
-          const column = arrayColl[index];
+          const indexColl = arrayColl.findIndex((item) => item === layoutItem.label);
+          const column = arrayColl[indexColl];
 
-          if (index) {
+          if (indexColl) {
             // Gerar a referência da célula (exemplo: A1, B2, etc.)
             const cellAddress = XLSX.utils.encode_cell({ r: index + 1, c: Object.keys(item).indexOf(column) });
 
@@ -159,12 +159,12 @@ const ExcelUploader = () => {
                 dataRow[layoutItem.key] = jsDate.toISOString().replace("T", " ").split(".")[0];
               }
             } else if (layoutItem.type === "boolean") {
-              dataRow[layoutItem.key] = arrayRow[index] === "Sim" || arrayRow[index] === "Yes" ? true : false;
+              dataRow[layoutItem.key] = arrayRow[indexColl] === "Sim" || arrayRow[indexColl] === "Yes" ? true : false;
             } else if (layoutItem.type === "currency") {
-              dataRow[layoutItem.key] = arrayRow[index] === undefined ? 0 : arrayRow[index];
+              dataRow[layoutItem.key] = arrayRow[indexColl] === undefined ? 0 : arrayRow[indexColl];
               dataRow[layoutItem.key] = String(dataRow[layoutItem.key]).replace(",", "");
             } else {
-              dataRow[layoutItem.key] = arrayRow[index];
+              dataRow[layoutItem.key] = arrayRow[indexColl];
             }
           }
         });
