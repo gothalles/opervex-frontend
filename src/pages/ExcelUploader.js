@@ -133,32 +133,36 @@ const ExcelUploader = () => {
 
         layout.forEach((layoutItem) => {
           const index = arrayColl.findIndex((item) => item === layoutItem.label);
+          const column = arrayColl[index];
 
           if (index) {
-            if (layoutItem.type === "date") {
-              if (typeof arrayRow[index] === "number" || !String(arrayRow[index]).includes("/")) {
-                const dateInfo = XLSX.SSF.parse_date_code(arrayRow[index]);
+            // Gerar a referência da célula (exemplo: A1, B2, etc.)
+            const cellAddress = XLSX.utils.encode_cell({ r: index + 1, c: Object.keys(item).indexOf(column) });
 
-                if (dateInfo.D != 0) {
-                  // Criar um objeto Date manualmente
-                  const jsDate = new Date(
-                    dateInfo.y, // Ano
-                    dateInfo.m - 1, // Mês (subtrair 1 porque JavaScript usa 0-11 para meses)
-                    dateInfo.d,
-                    Math.floor(dateInfo.T / 3600000), // Dia // Horas
-                    Math.floor((dateInfo.T % 3600000) / 60000), // Minutos
-                    Math.floor((dateInfo.T % 60000) / 1000) // Segundos
-                  );
+            // Pegar a célula correspondente na planilha
+            const cell = sheet[cellAddress];
 
-                  dataRow[layoutItem.key] = jsDate.toISOString().replace("T", " ").split(".")[0];
-                }
-              } else {
-                dataRow[layoutItem.key] = arrayRow[index];
+            if (cell && layoutItem.type === "date") {
+              const dateInfo = XLSX.SSF.parse_date_code(cell.v);
+
+              if (dateInfo.D != 0) {
+                // Criar um objeto Date manualmente
+                const jsDate = new Date(
+                  dateInfo.y, // Ano
+                  dateInfo.m - 1, // Mês (subtrair 1 porque JavaScript usa 0-11 para meses)
+                  dateInfo.d,
+                  Math.floor(dateInfo.T / 3600000), // Dia // Horas
+                  Math.floor((dateInfo.T % 3600000) / 60000), // Minutos
+                  Math.floor((dateInfo.T % 60000) / 1000) // Segundos
+                );
+
+                dataRow[layoutItem.key] = jsDate.toISOString().replace("T", " ").split(".")[0];
               }
             } else if (layoutItem.type === "boolean") {
               dataRow[layoutItem.key] = arrayRow[index] === "Sim" || arrayRow[index] === "Yes" ? true : false;
             } else if (layoutItem.type === "currency") {
-              dataRow[layoutItem.key] = String(arrayRow[index]).replace(",", "");
+              dataRow[layoutItem.key] = arrayRow[index] === undefined ? 0 : arrayRow[index];
+              dataRow[layoutItem.key] = String(dataRow[layoutItem.key]).replace(",", "");
             } else {
               dataRow[layoutItem.key] = arrayRow[index];
             }
