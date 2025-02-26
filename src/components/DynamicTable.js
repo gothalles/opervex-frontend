@@ -8,6 +8,8 @@ import {
   TableRow,
   TablePagination,
   TableSortLabel,
+  FormControlLabel,
+  Checkbox,
   Paper,
 } from "@mui/material";
 import { format } from "date-fns";
@@ -83,9 +85,13 @@ const DynamicTable = ({ layout, dados, page, rowsPerPage, setPage, setRowsPerPag
         <TableBody>
           {sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
             <TableRow key={index}>
-              {layout.map(
-                (col) =>
-                  col.visible && (
+              {layout.map((col) =>
+                col.visible ? (
+                  col.type === "boolean" ? (
+                    <TableCell key={col.key} size="small" align="center">
+                      <FormControlLabel control={<Checkbox checked={row[col.key]} />} value={row[col.key]} />
+                    </TableCell>
+                  ) : (
                     <TableCell key={col.key} size="small">
                       {row[col.key] != null &&
                         (() => {
@@ -112,12 +118,12 @@ const DynamicTable = ({ layout, dados, page, rowsPerPage, setPage, setRowsPerPag
                                 href={url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                style={{ textDecoration: "none", color: "blue" }}
+                                style={{ textDecoration: "none", color: "#90D5FF" }}
                               >
                                 {formattedValue}
                               </a>
                             ) : (
-                              <Link to={url} style={{ textDecoration: "none", color: "blue" }}>
+                              <Link to={url} style={{ textDecoration: "none", color: "#90D5FF" }}>
                                 {formattedValue}
                               </Link>
                             );
@@ -127,6 +133,7 @@ const DynamicTable = ({ layout, dados, page, rowsPerPage, setPage, setRowsPerPag
                         })()}
                     </TableCell>
                   )
+                ) : null
               )}
             </TableRow>
           ))}

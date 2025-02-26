@@ -14,9 +14,11 @@ const ServiceOrder = () => {
         reportName={"reporServiceOrder"}
         urlData={`${process.env.REACT_APP_API_URL}/Report/ServiceOrder`}
         urlSchema={`${process.env.REACT_APP_API_URL}/Report/ServiceOrder/Schema`}
-        links={[{ key: "code", link: "/Register/ServiceOrder/:id", newPage: true }]}
+        links={[
+          { key: "code", link: "/Register/ServiceOrder/:id", newPage: true },
+          { key: "reversal", link: "/Register/ServiceOrder/:id", newPage: true },
+        ]}
       />
-      {console.log(process.env)}
     </MainMenu>
   );
 };
