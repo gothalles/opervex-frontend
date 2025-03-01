@@ -16,19 +16,21 @@ import ReportStock from "./pages/Reports/Stock";
 import ReportStockSerial from "./pages/Reports/SockSerial";
 import ReportStockSerialDays from "./pages/Reports/StockSerialDays";
 import ReportGoodsMovement from "./pages/Reports/GoodsMovement";
+import ReportGoodsMovementFull from "./pages/Reports/GoodsMovementFull";
 import ReportServiceOrder from "./pages/Reports/ServiceOrder";
 
 // Proteção de Rotas - Verifica se o usuário está autenticado
 const PrivateRoute = ({ children, requiredRoles }) => {
-  const { user, roles, loading } = useAuth(); // Pega usuário e loading do contexto
+  const { user, roles, loading, checkToken } = useAuth(); // Pega usuário e loading do contexto
 
   // Se ainda está carregando, mostra um carregamento (pode ser uma tela de loading ou nada)
   if (loading) {
     return <div>Carregando...</div>; // Aqui você pode mostrar um spinner ou algo mais adequado
   }
 
-  // Verifica se o usuário está autenticado, se não, redireciona para login
-  if (!user) return <Navigate to="/login" />;
+  if (!user)
+    // Verifica se o usuário está autenticado, se não, redireciona para login
+    return <Navigate to="/login" />;
 
   // Verifica se o usuário tem pelo menos um dos papéis necessários
   if (requiredRoles) {
@@ -79,6 +81,7 @@ function App() {
           {AddPrivateRoute("/Report/StockSerial", <ReportStockSerial />, "REPORT_STOCK_SERIAL")}
           {AddPrivateRoute("/Report/StockSerialDays", <ReportStockSerialDays />, "REPORT_SERIAL_DAYS_DEPOSIT")}
           {AddPrivateRoute("/Report/GoodsMovement", <ReportGoodsMovement />, "REPORT_GOODS_MOVEMENT")}
+          {AddPrivateRoute("/Report/GoodsMovementFull", <ReportGoodsMovementFull />, "REPORT_GOODS_MOVEMENT_FULL")}
           {AddPrivateRoute("/Report/ServiceOrder", <ReportServiceOrder />, "REPORT_SERVICE_ORDER")}
 
           {/* Redireciona qualquer URL inválida para a Home */}

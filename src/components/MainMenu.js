@@ -71,6 +71,12 @@ var NAVIGATION = [
         command: "REPORT_GOODS_MOVEMENT",
       },
       {
+        segment: "GoodsMovementFull",
+        title: "Movimentação Completo",
+        icon: <DescriptionIcon />,
+        command: "REPORT_GOODS_MOVEMENT_FULL",
+      },
+      {
         segment: "ServiceOrder",
         title: "Ordem de Serviço",
         icon: <DescriptionIcon />,

@@ -50,7 +50,7 @@ const FilterDialog = ({ layout, setData, urlData, setPage }) => {
   const handleFiltrar = async () => {
     setLoading(true);
 
-    const validFilters = filters.filter((f) => f.field && f.value);
+    const validFilters = filters.filter((f) => f.field);
     const filterBody = validFilters.map(({ field, operator, value, logic }, index) => ({
       operation: index === 0 ? "AND" : logic,
       field,
