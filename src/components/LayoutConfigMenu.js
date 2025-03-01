@@ -4,6 +4,7 @@ import { IconButton, Menu, MenuItem, FormControlLabel, Checkbox, Button, Stack }
 import SettingsIcon from "@mui/icons-material/Settings";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useAuth } from "../context/AuthContext";
+import OpervexAPI from "../utils/OpervexAPI";
 
 const LayoutConfigMenu = ({ layout, setLayout, layoutName, urlSchema }) => {
   const { user } = useAuth(); // Pega usuário do contexto
@@ -47,16 +48,7 @@ const LayoutConfigMenu = ({ layout, setLayout, layoutName, urlSchema }) => {
     const dataBody = { id: idLayoutUser, items: tempLayout };
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/System/Layouts/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
-        body: JSON.stringify(dataBody),
-      });
-
-      await response.json();
+      const response = await OpervexAPI.post("/System/Layouts/", dataBody);
     } catch (err) {
       console.log(err);
     } finally {
@@ -88,15 +80,7 @@ const LayoutConfigMenu = ({ layout, setLayout, layoutName, urlSchema }) => {
     if (!user || !idLayoutUser) return null;
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/System/Layouts/${idLayoutUser}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
-
-      const result = await response.json();
+      const result = await OpervexAPI.get(`/System/Layouts/${idLayoutUser}`);
 
       return JSON.stringify(result.items);
     } catch (err) {
@@ -109,15 +93,7 @@ const LayoutConfigMenu = ({ layout, setLayout, layoutName, urlSchema }) => {
     if (!user || !idLayoutUser) return null;
 
     try {
-      const response = await fetch(urlSchema, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
-
-      const result = await response.json();
+      const result = await OpervexAPI.get(urlSchema);
 
       return result;
     } catch (err) {

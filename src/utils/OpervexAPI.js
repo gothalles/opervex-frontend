@@ -17,7 +17,6 @@ class OpervexAPI {
         const user = JSON.parse(localStorage.getItem("user"));
         if (user?.token) {
           config.headers.Authorization = `Bearer ${user.token}`;
-          console.log("Token enviado:", user.token); // Log do token enviado
         }
         return config;
       },
@@ -34,7 +33,7 @@ class OpervexAPI {
           const newToken = await this.refreshToken();
 
           if (newToken) {
-            console.log("Novo token obtido:", newToken);
+            console.log("Novo token obtido");
             error.config.headers.Authorization = `Bearer ${newToken}`;
             return this.api(error.config);
           }
@@ -65,7 +64,6 @@ class OpervexAPI {
   }
 
   async get(path) {
-    console.log(path);
     return await this.api.get(path).then((res) => res.data);
   }
 
@@ -74,6 +72,7 @@ class OpervexAPI {
   }
 
   async logout() {
+    console.log("Aqui -> logout");
     try {
       await this.api.post("/Logout");
     } catch (error) {

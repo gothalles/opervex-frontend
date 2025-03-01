@@ -1,6 +1,6 @@
 // src/context/AuthContext.js
 import { createContext, useContext, useEffect, useState } from "react";
-import OpervexAPI from "../utils/OpervexAPI2";
+import OpervexAPI from "../utils/OpervexAPI";
 import axios from "axios";
 
 export const AuthContext = createContext();
@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
     const expirationTime = localStorage.getItem("expirationTime");
 
     if (storedUser && expirationTime) {
-      if (new Date().getTime() < Number(expirationTime)) {
+      if (new Date().getTime() < new Date(expirationTime).getTime()) {
         setUser(JSON.parse(storedUser));
         if (storedRoles) setRoles(JSON.parse(storedRoles));
       } else {
@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     setLoading(false);
-  }, []);
+  }, []); // Remova a dependência do `user`
 
   // 🔄 Função de login
   const login = async (username, password) => {
@@ -34,8 +34,6 @@ export const AuthProvider = ({ children }) => {
         username,
         password,
       });
-
-      console.log("AQUI");
 
       if (data?.message === "success") {
         const userData = {
@@ -48,8 +46,7 @@ export const AuthProvider = ({ children }) => {
         };
 
         localStorage.setItem("user", JSON.stringify(userData));
-
-        localStorage.setItem("expirationTime", String(Date.now() + data.expiresIn * 1000));
+        localStorage.setItem("expirationTime", data.expiresIn);
 
         setUser(userData);
 
@@ -71,9 +68,17 @@ export const AuthProvider = ({ children }) => {
 
   // 🚀 Logout
   const logout = async () => {
-    await OpervexAPI.logout();
-    setUser(null);
-    setRoles(null);
+    try {
+      await OpervexAPI.logout();
+    } catch (error) {
+      console.error("Erro no logout:", error);
+    } finally {
+      localStorage.removeItem("user");
+      localStorage.removeItem("roles");
+      localStorage.removeItem("expirationTime");
+      setUser(null);
+      setRoles(null);
+    }
   };
 
   return <AuthContext.Provider value={{ user, roles, login, logout, loading }}>{children}</AuthContext.Provider>;
