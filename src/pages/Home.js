@@ -1,22 +1,23 @@
-// src/pages/Home.js
-import React from "react";
-import { Typography, Container, Box } from "@mui/material";
-import MainMenu from "../components/MainMenu";
+import { Container, Row } from "react-bootstrap";
 
 const Home = () => {
   return (
-    <MainMenu>
-      <Container maxWidth="md">
-        <Box sx={{ mt: 4, textAlign: "center" }}>
-          <Typography variant="h3" gutterBottom>
-            Bem-vindo ao Opervex!
-          </Typography>
-          <Typography variant="h5" color="textSecondary">
-            Gerencie seus produtos, serviços, lançamentos e relatórios de forma fácil e eficiente.
-          </Typography>
-        </Box>
+    <>
+      <Container>
+        <Row>
+          <h1 class=" text-center">Bem-vindo ao Opervex!</h1>
+        </Row>
+
+        <br />
+
+        <Row>
+          <h5 class="fw-light text-center">
+            Gerencie seus produtos, serviços, lançamentos e relatórios de forma
+            fácil e eficiente.
+          </h5>
+        </Row>
       </Container>
-    </MainMenu>
+    </>
   );
 };
 

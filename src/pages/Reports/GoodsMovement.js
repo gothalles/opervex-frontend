@@ -1,22 +1,19 @@
-// pages/Reports/GoodsMovementHistoryFull.js
+// pages/Reports/GoodsMovement.js
 import React from "react";
-import { Typography } from "@mui/material";
-import MainMenu from "../../components/MainMenu";
+import { Container, Row } from "react-bootstrap";
 import DynamicReport from "../../components/DynamicReport";
 
 const GoodsMovement = () => {
   return (
-    <MainMenu>
-      <Typography variant="h4" gutterBottom>
-        Relatório de Movimentação
-      </Typography>
+    <Container fluid>
+      <h1 class="fw-light text-center">Relatório de Movimentação</h1>
 
       <DynamicReport
         reportName={"reporGoodsMovement"}
         urlData={`${process.env.REACT_APP_API_URL}/Report/GoodsMovement`}
         urlSchema={`${process.env.REACT_APP_API_URL}/Report/GoodsMovement/Schema`}
       />
-    </MainMenu>
+    </Container>
   );
 };
 

@@ -1,22 +1,30 @@
 import React from "react";
-import { TextField } from "@mui/material";
+import { Form } from "react-bootstrap";
 import { NumericFormat } from "react-number-format";
 
-const CurrencyInput = ({ value, onChange, label }) => {
+const CurrencyInput = ({ value, onChange, label, hidden, disabled, name }) => {
   return (
-    <NumericFormat
-      value={value}
-      onValueChange={(values) => onChange(values.floatValue)}
-      thousandSeparator="."
-      decimalSeparator=","
-      prefix="R$ "
-      decimalScale={2}
-      fixedDecimalScale
-      customInput={TextField}
-      fullWidth
-      label={label ? label : "Valor"}
-      variant="outlined"
-    />
+    <Form.Group>
+      {label && <Form.Label>{label}</Form.Label>}
+      {disabled ? (
+        <div>R$ {value?.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+      ) : (
+        <NumericFormat
+          value={value}
+          onValueChange={(values) => onChange(values.floatValue)}
+          thousandSeparator="."
+          decimalSeparator=","
+          size="sm"
+          prefix="R$ "
+          decimalScale={2}
+          fixedDecimalScale
+          name={name}
+          hidden={hidden}
+          disabled={disabled}
+          customInput={Form.Control}
+        />
+      )}
+    </Form.Group>
   );
 };
 

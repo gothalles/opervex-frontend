@@ -1,6 +1,6 @@
 // components/FilterDialog.js
 import React from "react";
-import { Button } from "@mui/material";
+import { Button } from "react-bootstrap";
 import * as XLSX from "xlsx";
 
 const ExportData = ({ data, filename }) => {
@@ -12,7 +12,7 @@ const ExportData = ({ data, filename }) => {
   };
 
   return (
-    <Button variant="outlined" onClick={handleExportar}>
+    <Button variant="outline-primary" onClick={handleExportar}>
       Exportar
     </Button>
   );

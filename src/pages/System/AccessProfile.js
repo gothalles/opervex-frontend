@@ -29,7 +29,7 @@ const AccessProfile = () => {
     setLoading(true);
 
     const fetchData = async () => {
-      await fetchBranches();
+      //await fetchBranches();
     };
 
     fetchData();
@@ -37,13 +37,16 @@ const AccessProfile = () => {
 
   const fetchBranches = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/Accounting/Branches`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/Accounting/Branches`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
 
       const result = await response.json();
 

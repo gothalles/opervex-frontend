@@ -1,6 +1,6 @@
 // src/context/AuthContext.js
 import { createContext, useContext, useEffect, useState } from "react";
-import OpervexAPI from "../utils/OpervexAPI";
+import OpervexAPI from "../utils/Opervex";
 import axios from "axios";
 
 export const AuthContext = createContext();
@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }) => {
 
         setUser(userData);
 
-        const rolesUser = await OpervexAPI.get(`/System/Users/${data.id}/Profile`);
+        const rolesUser = await OpervexAPI.API.get(`/System/Users/${data.id}/Profile`);
         localStorage.setItem("roles", JSON.stringify(rolesUser));
         setRoles(rolesUser);
 

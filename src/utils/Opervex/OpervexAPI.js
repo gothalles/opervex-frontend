@@ -64,15 +64,27 @@ class OpervexAPI {
   }
 
   async get(path) {
-    return await this.api.get(path).then((res) => res.data);
+    return await this.api
+      .get(path)
+      .then((res) => res.data)
+      .catch((error) => error.response.data);
   }
 
   async post(path, body) {
-    return this.api.post(path, JSON.stringify(body)).then((res) => res.data);
+    return this.api
+      .post(path, JSON.stringify(body))
+      .then((res) => res.data)
+      .catch((error) => error.response.data);
+  }
+
+  async put(path, body) {
+    return this.api
+      .put(path, JSON.stringify(body))
+      .then((res) => res.data)
+      .catch((error) => error.response.data);
   }
 
   async logout() {
-    console.log("Aqui -> logout");
     try {
       await this.api.post("/Logout");
     } catch (error) {
@@ -85,4 +97,4 @@ class OpervexAPI {
   }
 }
 
-export default new OpervexAPI();
+export default new OpervexAPI(); // eslint-disable-next-line

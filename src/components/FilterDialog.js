@@ -1,23 +1,8 @@
 import React, { useState, useEffect } from "react";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  Box,
-  DialogActions,
-  Button,
-  IconButton,
-  TextField,
-  MenuItem,
-  Select,
-  FormControl,
-  InputLabel,
-} from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
+import { Modal, Button, Form, InputGroup } from "react-bootstrap";
 import { useAuth } from "../context/AuthContext";
 import CurrencyInput from "../components/CurrencyInput";
+import Opervex from "../utils/Opervex";
 
 const LOGIC_OPERATORS = [
   { label: "E", value: "AND" },
@@ -25,18 +10,20 @@ const LOGIC_OPERATORS = [
 ];
 
 const FilterDialog = ({ layout, setData, urlData, setPage }) => {
-  useEffect(() => {}, []);
-
-  const [openFilters, setOpenFilters] = useState(false);
+  const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState([]);
-  const { user } = useAuth(); // Usuário autenticado
+  const { user } = useAuth();
 
-  const handleOpenFilters = () => setOpenFilters(true);
-  const handleCloseFilters = () => setOpenFilters(false);
+  const handleShow = () => setShow(true);
+  const handleClose = () => setShow(false);
 
   const handleAddFilter = () => {
+    const fieldname = layout.filter((col) => col.visible)[0].key;
+
     setFilters((prev) => [...prev, { field: "", operator: "=", value: "", logic: prev.length ? "AND" : "" }]);
+
+    handleChangeFilter(filters.length, "field", fieldname);
   };
 
   const handleRemoveFilter = (index) => {
@@ -59,150 +46,86 @@ const FilterDialog = ({ layout, setData, urlData, setPage }) => {
     }));
 
     try {
-      const response = await fetch(urlData, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
-        body: JSON.stringify(filterBody),
-      });
+      const result = await Opervex.API.post(urlData, filterBody);
 
-      if (!response.ok) throw new Error("Erro ao buscar os dados.");
-
-      const result = await response.json();
       setData(result);
     } catch (err) {
       console.error("Erro ao carregar os dados:", err);
     } finally {
       setPage(0);
       setLoading(false);
-      handleCloseFilters();
+      handleClose();
     }
   };
 
   return (
     <>
-      <Button variant="outlined" onClick={handleOpenFilters}>
+      <Button variant="outline-primary" onClick={handleShow}>
         Filtros
       </Button>
 
-      <Dialog onClose={handleCloseFilters} open={openFilters} fullWidth maxWidth="lg">
-        <DialogTitle sx={{ m: 0, p: 2 }}>
-          Filtros
-          <IconButton
-            aria-label="close"
-            onClick={handleCloseFilters}
-            sx={{ position: "absolute", right: 8, top: 8, color: "gray" }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent dividers>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            {filters.map((filter, index) => (
-              <Box key={index} sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-                {index > 0 && (
-                  <FormControl size="small" sx={{ width: 100 }}>
-                    <TextField
-                      select
-                      label="Opção"
-                      size="small"
-                      fullWidth
-                      required
-                      value={filter.logic}
-                      onChange={(e) => handleChangeFilter(index, "logic", e.target.value)}
-                    >
-                      {LOGIC_OPERATORS.map((op) => (
-                        <MenuItem key={op.value} value={op.value}>
-                          {op.label}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                  </FormControl>
-                )}
-
-                <FormControl size="small" sx={{ flex: 1 }}>
-                  <TextField
-                    select
-                    label="Campo"
-                    size="small"
-                    fullWidth
-                    required
-                    value={filter.field}
-                    onChange={(e) => handleChangeFilter(index, "field", e.target.value)}
-                  >
-                    {layout
-                      .filter((col) => col.visible)
-                      .map((col) => (
-                        <MenuItem key={col.key} value={col.key}>
-                          {col.label}
-                        </MenuItem>
-                      ))}
-                  </TextField>
-                </FormControl>
-
-                <FormControl size="small" sx={{ width: 150 }}>
-                  <TextField
-                    select
-                    label="Operador"
-                    size="small"
-                    fullWidth
-                    required
-                    value={filter.operator}
-                    onChange={(e) => handleChangeFilter(index, "operator", e.target.value)}
-                  >
-                    {(layout.find((col) => col.key === filter.field)?.filterOptions ?? []).map((op) => (
-                      <MenuItem key={op.value} value={op.value}>
-                        {op.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </FormControl>
-
-                <FormControl size="small" sx={{ width: 200 }}>
-                  {layout.find((col) => col.key === filter.field)?.type === "currency" ? (
-                    <CurrencyInput
-                      value={filter.value}
-                      onChange={(value) => handleChangeFilter(index, "value", value)}
-                      label="Valor"
-                    />
-                  ) : (
-                    <TextField
-                      size="small"
-                      label="Valor"
-                      type={
-                        layout.find((col) => col.key === filter.field)?.type === "date"
-                          ? "date"
-                          : layout.find((col) => col.key === filter.field)?.type === "number"
-                            ? "number"
-                            : "text"
-                      }
-                      InputLabelProps={layout.find((col) => col.key === filter.field)?.type === "date" ? { shrink: true } : {}}
-                      value={filter.value}
-                      onChange={(e) => handleChangeFilter(index, "value", e.target.value)}
-                      fullWidth
-                    />
-                  )}
-                </FormControl>
-
-                <IconButton color="error" onClick={() => handleRemoveFilter(index)}>
-                  <RemoveIcon />
-                </IconButton>
-              </Box>
-            ))}
-
-            <Button startIcon={<AddIcon />} variant="outlined" onClick={handleAddFilter} sx={{ alignSelf: "flex-start" }}>
-              Adicionar Filtro
-            </Button>
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="contained" onClick={handleFiltrar} disabled={loading}>
+      <Modal show={show} onHide={handleClose} size="lg" backdrop="static">
+        <Modal.Header closeButton>
+          <Modal.Title>Filtros</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {filters.map((filter, index) => (
+            <InputGroup className="mb-2" key={index}>
+              {index > 0 && (
+                <Form.Select value={filter.logic} onChange={(e) => handleChangeFilter(index, "logic", e.target.value)}>
+                  {LOGIC_OPERATORS.map((op) => (
+                    <option key={op.value} value={op.value}>
+                      {op.label}
+                    </option>
+                  ))}
+                </Form.Select>
+              )}
+              <Form.Select value={filter.field} onChange={(e) => handleChangeFilter(index, "field", e.target.value)}>
+                {layout
+                  .filter((col) => col.visible)
+                  .map((col) => (
+                    <option key={col.key} value={col.key}>
+                      {col.label}
+                    </option>
+                  ))}
+              </Form.Select>
+              <Form.Select value={filter.operator} onChange={(e) => handleChangeFilter(index, "operator", e.target.value)}>
+                {(layout.find((col) => col.key === filter.field)?.filterOptions ?? []).map((op) => (
+                  <option key={op.value} value={op.value}>
+                    {op.label}
+                  </option>
+                ))}
+              </Form.Select>
+              {layout.find((col) => col.key === filter.field)?.type === "currency" ? (
+                <CurrencyInput value={filter.value} onChange={(value) => handleChangeFilter(index, "value", value)} />
+              ) : (
+                <Form.Control
+                  type={
+                    layout.find((col) => col.key === filter.field)?.type === "date"
+                      ? "date"
+                      : layout.find((col) => col.key === filter.field)?.type === "number"
+                      ? "number"
+                      : "text"
+                  }
+                  value={filter.value}
+                  onChange={(e) => handleChangeFilter(index, "value", e.target.value)}
+                />
+              )}
+              <Button variant="danger" onClick={() => handleRemoveFilter(index)}>
+                -
+              </Button>
+            </InputGroup>
+          ))}
+          <Button variant="outline-success" onClick={handleAddFilter}>
+            Adicionar Filtro
+          </Button>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={handleFiltrar} disabled={loading}>
             {loading ? "Carregando..." : "Filtrar"}
           </Button>
-        </DialogActions>
-      </Dialog>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };
