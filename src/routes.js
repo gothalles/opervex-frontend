@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import RegisterServiceOrder from "./pages/Register/ServiceOrder";
 import RegisterService from "./pages/Register/Service";
 import RegisterProduct from "./pages/Register/Product";
+import RegisterSalesOrder from "./pages/Register/SalesOrder";
 
 import ReportStock from "./pages/Reports/Stock";
 import ReportStockSerial from "./pages/Reports/SockSerial";
@@ -14,6 +15,7 @@ import ReportStockSerialDays from "./pages/Reports/StockSerialDays";
 import ReportGoodsMovement from "./pages/Reports/GoodsMovement";
 import ReportGoodsMovementFull from "./pages/Reports/GoodsMovementFull";
 import ReportServiceOrder from "./pages/Reports/ServiceOrder";
+import ReportSalesOrder from "./pages/Reports/SalesOrder";
 
 export default [
   {
@@ -38,6 +40,7 @@ export default [
     component: <Dashboard />,
     role: "",
   },
+  // Report
   {
     path: "/Report/Stock",
     private: true,
@@ -73,6 +76,13 @@ export default [
     private: true,
     component: <ReportServiceOrder />,
     role: "REPORT_SERVICE_ORDER",
+    admin: true,
+  },
+  {
+    path: "/Report/SalesOrder",
+    private: true,
+    component: <ReportSalesOrder />,
+    role: "REPORT_SALES_ORDER",
   },
   // Register - Product
   {
@@ -112,5 +122,19 @@ export default [
     private: true,
     component: <RegisterService />,
     role: "SERVICES",
+  },
+
+  // Sales
+  {
+    path: "/Register/SalesOrder",
+    private: true,
+    component: <RegisterSalesOrder />,
+    role: "SALES_ORDER",
+  },
+  {
+    path: "/Register/SalesOrder/:id",
+    private: true,
+    component: <RegisterSalesOrder />,
+    role: "SALES_ORDER",
   },
 ];

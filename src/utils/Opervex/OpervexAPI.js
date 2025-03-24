@@ -67,14 +67,14 @@ class OpervexAPI {
     return await this.api
       .get(path)
       .then((res) => res.data)
-      .catch((error) => error.response.data);
+      .catch((error) => error.response?.data || error.message);
   }
 
   async post(path, body) {
     return this.api
       .post(path, JSON.stringify(body))
       .then((res) => res.data)
-      .catch((error) => error.response.data);
+      .catch((error) => error.response?.data || error.message);
   }
 
   async put(path, body) {

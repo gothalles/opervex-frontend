@@ -28,33 +28,6 @@ const actionsDefault = {
   save: true,
 };
 
-const servicesType = [
-  {
-    key: 1,
-    description: "Instalação",
-  },
-  {
-    key: 2,
-    description: "Manutenção",
-  },
-  {
-    key: 3,
-    description: "Extra",
-  },
-  {
-    key: 4,
-    description: "Outros",
-  },
-  {
-    key: 5,
-    description: "Lançamento",
-  },
-  {
-    key: 6,
-    description: "Fusão",
-  },
-];
-
 const Service = () => {
   const { roles, loading } = useAuth();
   const [showModal, setShowModal] = useState(false);
@@ -62,11 +35,14 @@ const Service = () => {
   const [actions, setActions] = useState(actionsDefault);
   const [data, setData] = useState(dataDefault);
   const [branches, setBranches] = useState([]);
+  const [serviceTypes, setServiceTypes] = useState([]);
   const { id } = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
       commandAction({ ...actionsDefault, create: false });
+
+      setServiceTypes(await Opervex.ServiceManagement.ServiceType.findAll());
 
       const fetchedBranches = await Opervex.Accounting.Branches.findAll();
       setBranches(fetchedBranches);
@@ -162,7 +138,7 @@ const Service = () => {
 
       alert("Serviço atualizado com sucesso!");
     } else {
-      const result = await Opervex.ServiceManagement.Services.create(body);
+      const result = await Opervex.ServiceManagement.Service.create(body);
       if (result.error) {
         alert(result.error);
         return;
@@ -188,7 +164,7 @@ const Service = () => {
 
     if (!id) return;
 
-    var result = await Opervex.ServiceManagement.Services.findId(id);
+    var result = await Opervex.ServiceManagement.Service.findId(id);
 
     if (result && !result.error) {
       result.prices.forEach((price) => {
@@ -335,8 +311,8 @@ const Service = () => {
                       disabled={disabledField}
                     >
                       <option value="">Selecione...</option>
-                      {servicesType.map((type) => (
-                        <option key={type.key} value={type.key}>
+                      {serviceTypes.map((type) => (
+                        <option key={type.code} value={type.code}>
                           {type.description}
                         </option>
                       ))}

@@ -10,7 +10,7 @@ import Layout from "./components/Layout";
 import routes from "./routes";
 
 // Proteção de Rotas - Verifica se o usuário está autenticado
-const PrivateRoute = ({ children, requiredRoles }) => {
+const PrivateRoute = ({ children, requiredRoles, admin }) => {
   const { user, roles, loading } = useAuth(); // Pegando `user`, `roles` e `loading` do contexto
 
   // Exibe tela de carregamento enquanto os dados estão sendo processados
@@ -28,17 +28,21 @@ const PrivateRoute = ({ children, requiredRoles }) => {
     if (!hasPermission) return <Navigate to="/" />;
   }
 
+  if (admin) if (!user.administrator) return <Navigate to="/" />;
+
   return children;
 };
 
 // Função auxiliar para criar rotas privadas
-const AddPrivateRoute = (path, page, requiredRoles) => (
+const AddPrivateRoute = (path, page, requiredRoles, admin) => (
   <Route
     key={path}
     path={path}
     element={
       <Layout>
-        <PrivateRoute requiredRoles={requiredRoles}>{page}</PrivateRoute>
+        <PrivateRoute requiredRoles={requiredRoles} admin={admin}>
+          {page}
+        </PrivateRoute>
       </Layout>
     }
   />
@@ -51,7 +55,12 @@ function App() {
         <Routes>
           {routes.map((route, index) =>
             route.private ? (
-              AddPrivateRoute(route.path, route.component, route.role)
+              AddPrivateRoute(
+                route.path,
+                route.component,
+                route.role,
+                route?.admin
+              )
             ) : (
               <Route
                 key={route.path}

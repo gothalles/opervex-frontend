@@ -1,5 +1,6 @@
 // src/utils/Opervex/ServiceManagement/index.js
-import _services from "./Services";
+import _service from "./Service";
+import _serviceType from "./ServiceType";
 
 class ServiceManagement {
   #_api; // Definição de campo privado
@@ -7,7 +8,8 @@ class ServiceManagement {
   constructor(api) {
     this.#_api = api;
 
-    this.Services = new _services(this.#_api);
+    this.Service = new _service(this.#_api);
+    this.ServiceType = new _serviceType(this.#_api);
   }
 }
 

@@ -30,18 +30,23 @@ export const AuthProvider = ({ children }) => {
   // 🔄 Função de login
   const login = async (username, password) => {
     try {
-      const { data } = await axios.post(`${process.env.REACT_APP_API_URL}/Auth`, {
-        username,
-        password,
-      });
+      const { data } = await axios.post(
+        `${process.env.REACT_APP_API_URL}/Auth`,
+        {
+          username,
+          password,
+        }
+      );
 
       if (data?.message === "success") {
         const userData = {
           id: data.id,
           username: data.username,
+          administrator: data.administrator,
           fullname: data.fullname,
           email: data.email,
-          image: data.image || "https://avatars.githubusercontent.com/u/19550456",
+          image:
+            data.image || "https://avatars.githubusercontent.com/u/19550456",
           token: data.token,
         };
 
@@ -50,7 +55,9 @@ export const AuthProvider = ({ children }) => {
 
         setUser(userData);
 
-        const rolesUser = await OpervexAPI.API.get(`/System/Users/${data.id}/Profile`);
+        const rolesUser = await OpervexAPI.API.get(
+          `/System/Users/${data.id}/Profile`
+        );
         localStorage.setItem("roles", JSON.stringify(rolesUser));
         setRoles(rolesUser);
 
@@ -81,7 +88,11 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  return <AuthContext.Provider value={{ user, roles, login, logout, loading }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, roles, login, logout, loading }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 // Hook personalizado

@@ -14,7 +14,9 @@ const CustomTableRow = ({ row, layout, links, index }) => {
                 <FormCheck type="checkbox" checked={row[col.key]} readOnly />
               ) : (
                 (() => {
-                  const linkObj = Array.isArray(links) ? links.find((l) => l.key === col.key) : null;
+                  const linkObj = Array.isArray(links)
+                    ? links.find((l) => l.key === col.key)
+                    : null;
 
                   const formattedValue =
                     col.type === "date"
@@ -38,11 +40,19 @@ const CustomTableRow = ({ row, layout, links, index }) => {
                   if (linkObj && row[col.key]) {
                     const url = linkObj.link.replace(":id", row[col.key]);
                     return linkObj.newPage ? (
-                      <a href={url} target="_blank" rel="noopener noreferrer" className="text-primary text-decoration-none">
+                      <a
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary text-decoration-none"
+                      >
                         {formattedValue}
                       </a>
                     ) : (
-                      <Link to={url} className="text-primary text-decoration-none">
+                      <Link
+                        to={url}
+                        className="text-primary text-decoration-none"
+                      >
                         {formattedValue}
                       </Link>
                     );

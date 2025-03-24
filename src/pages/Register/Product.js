@@ -1,7 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Container, Row, Col, Form, Table, InputGroup, Card, Image, Button } from "react-bootstrap";
-import { FaSearch, FaUpload, FaPlus, FaSave, FaPencilAlt, FaTrash } from "react-icons/fa";
+import {
+  Container,
+  Row,
+  Col,
+  Form,
+  Table,
+  InputGroup,
+  Card,
+  Image,
+  Button,
+} from "react-bootstrap";
+import {
+  FaSearch,
+  FaUpload,
+  FaPlus,
+  FaSave,
+  FaPencilAlt,
+  FaTrash,
+} from "react-icons/fa";
 import { MdOutlineCancel } from "react-icons/md";
 
 import { useAuth } from "../../context/AuthContext";
@@ -67,15 +84,23 @@ const Product = () => {
   }
 
   const commandAction = (actions) => {
-    const hasPermission = roles.find((role) => role.command === rolePageRequire);
+    const hasPermission = roles.find(
+      (role) => role.command === rolePageRequire
+    );
 
     if (!hasPermission) {
       setActions(actionsDefault);
       return;
     }
 
-    if (!actions.create) actions.create = !hasPermission.actions.some((action) => action.key === "Create");
-    if (!actions.change) actions.change = !hasPermission.actions.some((action) => action.key === "Change");
+    if (!actions.create)
+      actions.create = !hasPermission.actions.some(
+        (action) => action.key === "Create"
+      );
+    if (!actions.change)
+      actions.change = !hasPermission.actions.some(
+        (action) => action.key === "Change"
+      );
 
     setActions({ ...actions });
   };
@@ -103,10 +128,14 @@ const Product = () => {
       case "unitMeasurement":
         newData.unitMeasurement = value;
 
-        const baseIndex = newData.unitsMeasure.findIndex((x) => x.base === true);
+        const baseIndex = newData.unitsMeasure.findIndex(
+          (x) => x.base === true
+        );
         if (baseIndex !== -1) newData.unitsMeasure.splice(baseIndex, 1);
 
-        const unitIndex = newData.unitsMeasure.findIndex((x) => x.unit === value);
+        const unitIndex = newData.unitsMeasure.findIndex(
+          (x) => x.unit === value
+        );
         if (unitIndex !== -1) newData.unitsMeasure.splice(unitIndex, 1);
 
         newData.unitsMeasure.push({
@@ -133,11 +162,20 @@ const Product = () => {
       const reader = new FileReader();
 
       reader.onloadend = () => {
-        const base64String = reader.result.replace(/^data:image\/[a-zA-Z0-9+-]+;base64,/, ""); // Remove qualquer prefixo de imagem Base64
+        const base64String = reader.result.replace(
+          /^data:image\/[a-zA-Z0-9+-]+;base64,/,
+          ""
+        ); // Remove qualquer prefixo de imagem Base64
 
         setData((prev) => ({
           ...prev,
-          image: { ...prev.image, base64: base64String, type: file.type, length: file.size, name: file.name },
+          image: {
+            ...prev.image,
+            base64: base64String,
+            type: file.type,
+            length: file.size,
+            name: file.name,
+          },
         }));
       };
       reader.readAsDataURL(file);
@@ -171,7 +209,10 @@ const Product = () => {
     if (!body.image.base64) delete body.image;
 
     if (data.code) {
-      const result = await Opervex.MaterialMaster.Products.update(body.code, body);
+      const result = await Opervex.MaterialMaster.Products.update(
+        body.code,
+        body
+      );
       if (result.error) {
         alert(result.error);
         return;
@@ -211,10 +252,13 @@ const Product = () => {
 
     if (result) {
       result.unitsMeasure.map((unitMeasure) => {
-        unitMeasure.description = unitsMeasure.find((x) => x.code === unitMeasure.unit)?.description;
+        unitMeasure.description = unitsMeasure.find(
+          (x) => x.code === unitMeasure.unit
+        )?.description;
       });
 
       setData(result);
+
       commandAction({ ...actionsDefault, create: false, change: false });
     } else {
       setData(dataDefault);
@@ -228,21 +272,32 @@ const Product = () => {
 
     if (name === "unit") {
       if (data.unitsMeasure.find((x) => x.unit === value.toUpperCase())) {
-        alert("Undade de conversão '" + value.toUpperCase() + "' já cadastrada");
+        alert(
+          "Undade de conversão '" + value.toUpperCase() + "' já cadastrada"
+        );
 
         return;
       }
       setData((prev) => ({
         ...prev,
         unitsMeasure: prev.unitsMeasure.map((row, i) =>
-          i === index ? { ...row, description: unitsMeasure.find((x) => x.code === value.toUpperCase())?.description } : row
+          i === index
+            ? {
+                ...row,
+                description: unitsMeasure.find(
+                  (x) => x.code === value.toUpperCase()
+                )?.description,
+              }
+            : row
         ),
       }));
     }
 
     setData((prev) => ({
       ...prev,
-      unitsMeasure: prev.unitsMeasure.map((row, i) => (i === index ? { ...row, [name]: value.toUpperCase() } : row)),
+      unitsMeasure: prev.unitsMeasure.map((row, i) =>
+        i === index ? { ...row, [name]: value.toUpperCase() } : row
+      ),
     }));
   };
 
@@ -256,7 +311,10 @@ const Product = () => {
   const addRow = () => {
     setData((prev) => ({
       ...prev,
-      unitsMeasure: [...prev.unitsMeasure, { unit: "", description: "", denominator: 1, counter: 1, base: false }],
+      unitsMeasure: [
+        ...prev.unitsMeasure,
+        { unit: "", description: "", denominator: 1, counter: 1, base: false },
+      ],
     }));
   };
 
@@ -272,16 +330,40 @@ const Product = () => {
                   <h5>Cabeçalho</h5>
                 </Col>
                 <Col md={4} className="text-end">
-                  <Button variant="success" size="sm" className="me-2" onClick={handleButtonCreate} hidden={actions.create}>
+                  <Button
+                    variant="success"
+                    size="sm"
+                    className="me-2"
+                    onClick={handleButtonCreate}
+                    hidden={actions.create}
+                  >
                     <FaPlus /> Novo
                   </Button>
-                  <Button variant="primary" size="sm" className="me-2" onClick={handleButtonChange} hidden={actions.change}>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    className="me-2"
+                    onClick={handleButtonChange}
+                    hidden={actions.change}
+                  >
                     <FaPencilAlt /> Alterar
                   </Button>
-                  <Button variant="danger" size="sm" className="me-2" onClick={handleButtonCancel} hidden={actions.save}>
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    className="me-2"
+                    onClick={handleButtonCancel}
+                    hidden={actions.save}
+                  >
                     <MdOutlineCancel /> Cancelar
                   </Button>
-                  <Button variant="primary" size="sm" className="me-2" onClick={handleButtonSave} hidden={actions.save}>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    className="me-2"
+                    onClick={handleButtonSave}
+                    hidden={actions.save}
+                  >
                     <FaSave /> Salvar
                   </Button>
                 </Col>
@@ -293,9 +375,20 @@ const Product = () => {
                   <Form.Group>
                     <Form.Label>Código</Form.Label>
                     <InputGroup>
-                      <Form.Control type="text" size="sm" value={data.code} name="code" onChange={handleChange} disabled={true} />
+                      <Form.Control
+                        type="text"
+                        size="sm"
+                        value={data.code}
+                        name="code"
+                        onChange={handleChange}
+                        disabled={true}
+                      />
 
-                      <InputGroup.Text size="sm" type="button" onClick={handleButtonSearch}>
+                      <InputGroup.Text
+                        size="sm"
+                        type="button"
+                        onClick={handleButtonSearch}
+                      >
                         <FaSearch />
                       </InputGroup.Text>
                     </InputGroup>
@@ -361,7 +454,10 @@ const Product = () => {
                         >
                           <option value="">Selecione...</option>
                           {unitsMeasure.map((unitMeasure) => (
-                            <option key={unitMeasure.code} value={unitMeasure.code}>
+                            <option
+                              key={unitMeasure.code}
+                              value={unitMeasure.code}
+                            >
                               {unitMeasure.description}
                             </option>
                           ))}
@@ -398,7 +494,9 @@ const Product = () => {
                           onChange={handleChange}
                           name="subcategory"
                           disabled={
-                            !categories.find((x) => x.code === Number(data.category))?.subcategories.length || disabledField
+                            !categories.find(
+                              (x) => x.code === Number(data.category)
+                            )?.subcategories.length || disabledField
                           }
                         >
                           <option value={null}>Selecione...</option>
@@ -406,7 +504,10 @@ const Product = () => {
                             ?.filter((x) => x.code === Number(data.category))
                             .map((category) =>
                               category.subcategories.map((subcategory) => (
-                                <option key={subcategory.code} value={subcategory.code}>
+                                <option
+                                  key={subcategory.code}
+                                  value={subcategory.code}
+                                >
                                   {subcategory.description}
                                 </option>
                               ))
@@ -447,7 +548,11 @@ const Product = () => {
                           <Image
                             width={200}
                             height={200}
-                            src={`data:${data.image.type};base64,${data.image.base64}`}
+                            src={
+                              data.image.type
+                                ? `data:${data.image.type};base64,${data.image.base64}`
+                                : ""
+                            }
                             name="image"
                             onChange={handleChange}
                             rounded
@@ -458,7 +563,12 @@ const Product = () => {
                     <Col md={4}>
                       <Form.Group className="d-flex justify-content-start">
                         <div className="mb-2">
-                          <Button onClick={() => document.getElementById("fileInput").click()} disabled={disabledField}>
+                          <Button
+                            onClick={() =>
+                              document.getElementById("fileInput").click()
+                            }
+                            disabled={disabledField}
+                          >
                             <FaUpload /> Carregar Imagem
                           </Button>
                           <input
@@ -550,7 +660,11 @@ const Product = () => {
                       data.unitsMeasure.map((unitMeasure, index) => (
                         <tr key={index}>
                           <td className="text-center align-middle">
-                            <Form.Check type="checkbox" checked={unitMeasure.base} readOnly />
+                            <Form.Check
+                              type="checkbox"
+                              checked={unitMeasure.base}
+                              readOnly
+                            />
                           </td>
                           <td>
                             <Form.Control
@@ -558,7 +672,9 @@ const Product = () => {
                               size="sm"
                               name="unit"
                               value={unitMeasure.unit}
-                              onChange={(e) => handleChangeUnitsMeasure(index, e)}
+                              onChange={(e) =>
+                                handleChangeUnitsMeasure(index, e)
+                              }
                               disabled={disabledField || unitMeasure.base}
                             />
                           </td>
@@ -569,7 +685,9 @@ const Product = () => {
                               type="number"
                               name="denominator"
                               value={unitMeasure.denominator}
-                              onChange={(e) => handleChangeUnitsMeasure(index, e)}
+                              onChange={(e) =>
+                                handleChangeUnitsMeasure(index, e)
+                              }
                               disabled={disabledField || unitMeasure.base}
                             />
                           </td>
@@ -579,7 +697,9 @@ const Product = () => {
                               type="number"
                               name="counter"
                               value={unitMeasure.counter}
-                              onChange={(e) => handleChangeUnitsMeasure(index, e)}
+                              onChange={(e) =>
+                                handleChangeUnitsMeasure(index, e)
+                              }
                               disabled={disabledField || unitMeasure.base}
                             />
                           </td>
@@ -605,7 +725,11 @@ const Product = () => {
                   </tbody>
                 </Table>
 
-                <Button variant="primary" onClick={addRow} hidden={actions.save}>
+                <Button
+                  variant="primary"
+                  onClick={addRow}
+                  hidden={actions.save}
+                >
                   Adicionar Linha
                 </Button>
               </Row>

@@ -77,8 +77,13 @@ const SearchHelpTable = ({ layout, data, onSelectItem }) => {
               layout.map(
                 (col) =>
                   col.visible && (
-                    <th key={col.key} onClick={() => handleRequestSort(col.key)} style={{ cursor: "pointer" }}>
-                      {col.label} {orderBy === col.key ? (order === "asc" ? "▲" : "▼") : ""}
+                    <th
+                      key={col.key}
+                      onClick={() => handleRequestSort(col.key)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      {col.label}{" "}
+                      {orderBy === col.key ? (order === "asc" ? "▲" : "▼") : ""}
                     </th>
                   )
               )
@@ -88,7 +93,11 @@ const SearchHelpTable = ({ layout, data, onSelectItem }) => {
             <th>Ação</th>
           </tr>
         </thead>
-        <tbody>{sortedData.map((row, index) => CustomTableRow({ row, layout: newLayout, links: [], index }))}</tbody>
+        <tbody>
+          {sortedData.map((row, index) =>
+            CustomTableRow({ row, layout: newLayout, links: [], index })
+          )}
+        </tbody>
       </Table>
     </div>
   );

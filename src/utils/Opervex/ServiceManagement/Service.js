@@ -18,7 +18,11 @@ class Services {
   }
 
   async findAll() {
-    //return this.#_api.get("/System/UnitsMeasure");
+    return this.#_api.get("/ServiceManagement/Service");
+  }
+
+  async getSales() {
+    return this.#_api.get("/ServiceManagement/Service?serviceType=7");
   }
 }
 

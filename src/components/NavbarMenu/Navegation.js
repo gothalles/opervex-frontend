@@ -23,7 +23,7 @@ export default [
     title: "Operação",
   },
   {
-    segment: "Register/Sales",
+    segment: "Register/SalesOrder",
     title: "Vendas",
     icon: <RiShoppingCartLine />,
   },
@@ -31,6 +31,7 @@ export default [
     segment: "Register/ServiceOrder",
     title: "Ordem de Serviço",
     icon: <MdEmojiTransportation />,
+    admin: true,
   },
   {
     kind: "header",
@@ -101,6 +102,12 @@ export default [
         title: "Serial - Dias em Estoque",
         icon: <AiOutlineFileText />,
         command: "REPORT_SERIAL_DAYS_DEPOSIT",
+      },
+      {
+        segment: "SalesOrder",
+        title: "Ordens de Venda",
+        icon: <AiOutlineFileText />,
+        command: "REPORT_SALES_ORDER",
       },
     ],
   },

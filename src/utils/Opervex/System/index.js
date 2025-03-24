@@ -1,6 +1,7 @@
 // src/utils/Opervex/System/index.js
 import _layout from "./Layouts";
 import _unitsMeasure from "./UnitsMeasure";
+import _telephoneOperator from "./TelephoneOperator";
 
 class System {
   #_api; // Definição de campo privado
@@ -10,6 +11,7 @@ class System {
 
     this.Layouts = new _layout(this.#_api);
     this.UnitsMeasure = new _unitsMeasure(this.#_api);
+    this.TelephoneOperator = new _telephoneOperator(this.#_api);
   }
 }
 
