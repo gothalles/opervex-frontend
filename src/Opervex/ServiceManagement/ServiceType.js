@@ -1,3 +1,5 @@
+// src/Opervex/ServiceManagement/ServiceType.js
+
 class Services {
   #_api; // Definição de campo privado
 

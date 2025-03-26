@@ -1,6 +1,7 @@
+// src/components/CustomAlert/index.js
+
 import React from "react";
 import { Alert } from "react-bootstrap";
-import PropTypes from "prop-types"; // Se estiver usando PropTypes
 
 const CustomAlert = ({ errors, setErrors }) => {
   return (

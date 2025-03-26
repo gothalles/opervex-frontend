@@ -1,4 +1,5 @@
-// pages/Reports/GoodsMovement.js
+// src/pages/Reports/GoodsMovement.js
+
 import React from "react";
 import { Container, Row } from "react-bootstrap";
 import DynamicReport from "../../components/DynamicReport";

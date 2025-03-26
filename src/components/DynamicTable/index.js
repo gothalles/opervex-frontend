@@ -1,10 +1,20 @@
-// src/components/DynamicTable.js
+// src/components/DynamicTable/index.js
+
 import React, { useState, useEffect } from "react";
 import { Table, Pagination } from "react-bootstrap";
 
 import CustomTableRow from "./CustomTableRow";
 
-const DynamicTable = ({ layout, dados, page, rowsPerPage, setPage, setRowsPerPage, links, noPagination }) => {
+const DynamicTable = ({
+  layout,
+  dados,
+  page,
+  rowsPerPage,
+  setPage,
+  setRowsPerPage,
+  links,
+  noPagination,
+}) => {
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("");
 
@@ -55,17 +65,36 @@ const DynamicTable = ({ layout, dados, page, rowsPerPage, setPage, setRowsPerPag
   const PaginationMenu = () => {
     return (
       <Pagination hidden={noPagination}>
-        <Pagination.First onClick={() => handleChangePage(0)} disabled={page === 0} />
-        <Pagination.Prev onClick={() => handleChangePage(page - 1)} disabled={page === 0} />
+        <Pagination.First
+          onClick={() => handleChangePage(0)}
+          disabled={page === 0}
+        />
+        <Pagination.Prev
+          onClick={() => handleChangePage(page - 1)}
+          disabled={page === 0}
+        />
 
-        {Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i).map((p) => (
-          <Pagination.Item key={p} active={p === page} onClick={() => handleChangePage(p)}>
+        {Array.from(
+          { length: endPage - startPage + 1 },
+          (_, i) => startPage + i
+        ).map((p) => (
+          <Pagination.Item
+            key={p}
+            active={p === page}
+            onClick={() => handleChangePage(p)}
+          >
             {p + 1}
           </Pagination.Item>
         ))}
 
-        <Pagination.Next onClick={() => handleChangePage(page + 1)} disabled={page >= totalPages - 1} />
-        <Pagination.Last onClick={() => handleChangePage(totalPages - 1)} disabled={page >= totalPages - 1} />
+        <Pagination.Next
+          onClick={() => handleChangePage(page + 1)}
+          disabled={page >= totalPages - 1}
+        />
+        <Pagination.Last
+          onClick={() => handleChangePage(totalPages - 1)}
+          disabled={page >= totalPages - 1}
+        />
       </Pagination>
     );
   };
@@ -78,8 +107,13 @@ const DynamicTable = ({ layout, dados, page, rowsPerPage, setPage, setRowsPerPag
             {layout.map(
               (col) =>
                 col.visible && (
-                  <th key={col.key} onClick={() => handleRequestSort(col.key)} style={{ cursor: "pointer" }}>
-                    {col.label} {orderBy === col.key ? (order === "asc" ? "▲" : "▼") : ""}
+                  <th
+                    key={col.key}
+                    onClick={() => handleRequestSort(col.key)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    {col.label}{" "}
+                    {orderBy === col.key ? (order === "asc" ? "▲" : "▼") : ""}
                   </th>
                 )
             )}
@@ -89,13 +123,22 @@ const DynamicTable = ({ layout, dados, page, rowsPerPage, setPage, setRowsPerPag
           {!noPagination
             ? sortedData
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => CustomTableRow({ row, layout, links, index }))
-            : sortedData.map((row, index) => CustomTableRow({ row, layout, links, index }))}
+                .map((row, index) =>
+                  CustomTableRow({ row, layout, links, index })
+                )
+            : sortedData.map((row, index) =>
+                CustomTableRow({ row, layout, links, index })
+              )}
         </tbody>
       </Table>
 
       <div className="d-flex justify-content-between align-items-center mt-3">
-        <select onChange={handleChangeRowsPerPage} value={rowsPerPage} className="form-select w-auto" hidden={noPagination}>
+        <select
+          onChange={handleChangeRowsPerPage}
+          value={rowsPerPage}
+          className="form-select w-auto"
+          hidden={noPagination}
+        >
           {[5, 10, 25, 50, 100].map((size) => (
             <option key={size} value={size}>
               {size} por página

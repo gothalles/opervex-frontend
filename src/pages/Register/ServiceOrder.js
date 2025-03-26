@@ -3,20 +3,26 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { Container, Row, Col, Form, Table, InputGroup, Card } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Form,
+  Table,
+  InputGroup,
+  Card,
+} from "react-bootstrap";
 import { FaSearch, FaCloudDownloadAlt } from "react-icons/fa";
-import Opervex from "../../utils/Opervex";
+import Opervex from "../../Opervex";
 
 const ServiceOrder = () => {
   const [cities, setCities] = useState([]);
   const [branches, setBranches] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [data, setData] = useState({});
   const { id } = useParams();
   const { user } = useAuth();
 
   useEffect(() => {
-    setLoading(true);
     const fetchData = async () => {
       setBranches(await Opervex.Accounting.Branches.findAll());
       setCities(await Opervex.Accounting.Cities.findAll());
@@ -30,19 +36,21 @@ const ServiceOrder = () => {
   const getData = async () => {
     if (!user) return;
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/ServiceManagement/ServiceOrder/${id}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/ServiceManagement/ServiceOrder/${id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
       const result = await response.json();
       setData(result);
     } catch (err) {
       console.error("Erro ao carregar os dados:", err);
     } finally {
-      setLoading(false);
     }
   };
 
@@ -61,7 +69,11 @@ const ServiceOrder = () => {
                   <Form.Group>
                     <Form.Label>Protocolo</Form.Label>
                     <InputGroup>
-                      <Form.Control type="text" size="sm" value={data?.header?.protocol} />
+                      <Form.Control
+                        type="text"
+                        size="sm"
+                        value={data?.header?.protocol}
+                      />
 
                       <InputGroup.Text size="sm" type="button">
                         <FaSearch />
@@ -72,25 +84,41 @@ const ServiceOrder = () => {
                 <Col md={2}>
                   <Form.Group>
                     <Form.Label>ID Tarefa</Form.Label>
-                    <Form.Control type="text" size="sm" value={data?.header?.idTask} />
+                    <Form.Control
+                      type="text"
+                      size="sm"
+                      value={data?.header?.idTask}
+                    />
                   </Form.Group>
                 </Col>
                 <Col md={2}>
                   <Form.Group>
                     <Form.Label>Data Execução</Form.Label>
-                    <Form.Control type="date" size="sm" value={data?.header?.documentDate} />
+                    <Form.Control
+                      type="date"
+                      size="sm"
+                      value={data?.header?.documentDate}
+                    />
                   </Form.Group>
                 </Col>
                 <Col md={1}>
                   <Form.Group>
                     <Form.Label>Início</Form.Label>
-                    <Form.Control type="time" size="sm" value={data?.header?.startTime} />
+                    <Form.Control
+                      type="time"
+                      size="sm"
+                      value={data?.header?.startTime}
+                    />
                   </Form.Group>
                 </Col>
                 <Col md={1}>
                   <Form.Group>
                     <Form.Label>Fim</Form.Label>
-                    <Form.Control type="time" size="sm" value={data?.header?.endTime} />
+                    <Form.Control
+                      type="time"
+                      size="sm"
+                      value={data?.header?.endTime}
+                    />
                   </Form.Group>
                 </Col>
               </Row>
@@ -132,7 +160,11 @@ const ServiceOrder = () => {
                   <Form.Group>
                     <Form.Label>Link:</Form.Label>
                     <InputGroup>
-                      <Form.Control type="text" size="sm" value={data?.header?.link} />
+                      <Form.Control
+                        type="text"
+                        size="sm"
+                        value={data?.header?.link}
+                      />
                       <InputGroup.Text size="sm" type="button">
                         <FaCloudDownloadAlt />
                       </InputGroup.Text>
@@ -155,13 +187,21 @@ const ServiceOrder = () => {
                     <Col md={3}>
                       <Form.Group>
                         <Form.Label>Código</Form.Label>
-                        <Form.Control type="number" size="sm" value={data?.header?.customerCode} />
+                        <Form.Control
+                          type="number"
+                          size="sm"
+                          value={data?.header?.customerCode}
+                        />
                       </Form.Group>
                     </Col>
                     <Col md={9}>
                       <Form.Group>
                         <Form.Label>Nome</Form.Label>
-                        <Form.Control type="text" size="sm" value={data?.header?.customerName} />
+                        <Form.Control
+                          type="text"
+                          size="sm"
+                          value={data?.header?.customerName}
+                        />
                       </Form.Group>
                     </Col>
                   </Row>
@@ -195,7 +235,11 @@ const ServiceOrder = () => {
                     <Col md={3}>
                       <Form.Label>Técnico</Form.Label>
                       <InputGroup>
-                        <Form.Control type="text" size="sm" value={data?.header?.technician} />
+                        <Form.Control
+                          type="text"
+                          size="sm"
+                          value={data?.header?.technician}
+                        />
 
                         <InputGroup.Text size="sm" type="button">
                           <FaSearch />
@@ -206,7 +250,11 @@ const ServiceOrder = () => {
                       <Form.Group>
                         <Form.Label>Nome</Form.Label>
                         <InputGroup>
-                          <Form.Control type="text" size="sm" value={data?.header?.technicianName} />
+                          <Form.Control
+                            type="text"
+                            size="sm"
+                            value={data?.header?.technicianName}
+                          />
                         </InputGroup>
                       </Form.Group>
                     </Col>
@@ -218,7 +266,11 @@ const ServiceOrder = () => {
                       <Form.Group>
                         <Form.Label>Supervisor</Form.Label>
                         <InputGroup>
-                          <Form.Control type="text" size="sm" value={data?.header?.supervisor} />
+                          <Form.Control
+                            type="text"
+                            size="sm"
+                            value={data?.header?.supervisor}
+                          />
 
                           <InputGroup.Text size="sm" type="button">
                             <FaSearch />
@@ -230,7 +282,11 @@ const ServiceOrder = () => {
                       <Form.Group>
                         <Form.Label>Nome</Form.Label>
                         <InputGroup>
-                          <Form.Control type="text" size="sm" value={data?.header?.supervisorName} />
+                          <Form.Control
+                            type="text"
+                            size="sm"
+                            value={data?.header?.supervisorName}
+                          />
                         </InputGroup>
                       </Form.Group>
                     </Col>
@@ -242,7 +298,11 @@ const ServiceOrder = () => {
                       <Form.Label>Auxiliar</Form.Label>
                       <Form.Group>
                         <InputGroup>
-                          <Form.Control type="text" size="sm" value={data?.header?.assistant} />
+                          <Form.Control
+                            type="text"
+                            size="sm"
+                            value={data?.header?.assistant}
+                          />
 
                           <InputGroup.Text size="sm" type="button">
                             <FaSearch />
@@ -254,7 +314,11 @@ const ServiceOrder = () => {
                       <Form.Group>
                         <Form.Label>Nome</Form.Label>
                         <InputGroup>
-                          <Form.Control type="text" size="sm" value={data?.header?.assistantName} />
+                          <Form.Control
+                            type="text"
+                            size="sm"
+                            value={data?.header?.assistantName}
+                          />
                         </InputGroup>
                       </Form.Group>
                     </Col>

@@ -1,3 +1,5 @@
+// src/components/Layout.js
+
 import NavbarMenu from "./NavbarMenu";
 
 const Login = ({ children }) => {

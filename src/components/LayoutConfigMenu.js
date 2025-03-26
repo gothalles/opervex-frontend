@@ -1,9 +1,11 @@
+// src/components/LayoutConfigMenu.js
+
 import React, { useState, useEffect } from "react";
 import { Button, Modal, Form, ListGroup } from "react-bootstrap";
 import { CiSettings } from "react-icons/ci";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useAuth } from "../context/AuthContext";
-import OpervexAPI from "../utils/Opervex";
+import OpervexAPI from "../Opervex";
 
 const LayoutConfigMenu = ({ layout, setLayout, layoutName, urlSchema }) => {
   const { user } = useAuth();
@@ -51,7 +53,9 @@ const LayoutConfigMenu = ({ layout, setLayout, layoutName, urlSchema }) => {
 
     if (savedLayout) savedLayout = JSON.stringify(savedLayout.items);
 
-    savedLayout = savedLayout ? JSON.parse(savedLayout) : await getLayoutDefault();
+    savedLayout = savedLayout
+      ? JSON.parse(savedLayout)
+      : await getLayoutDefault();
 
     setLayout(savedLayout || []);
     setTempLayout(savedLayout || []);
@@ -69,7 +73,11 @@ const LayoutConfigMenu = ({ layout, setLayout, layoutName, urlSchema }) => {
   };
 
   const handleToggleColumn = (key) => {
-    setTempLayout(tempLayout.map((col) => (col.key === key ? { ...col, visible: !col.visible } : col)));
+    setTempLayout(
+      tempLayout.map((col) =>
+        col.key === key ? { ...col, visible: !col.visible } : col
+      )
+    );
   };
 
   const handleOnDragEnd = (result) => {
@@ -97,9 +105,17 @@ const LayoutConfigMenu = ({ layout, setLayout, layoutName, urlSchema }) => {
               {(provided) => (
                 <ListGroup ref={provided.innerRef} {...provided.droppableProps}>
                   {tempLayout.map((col, index) => (
-                    <Draggable key={col.key} draggableId={col.key} index={index}>
+                    <Draggable
+                      key={col.key}
+                      draggableId={col.key}
+                      index={index}
+                    >
                       {(provided) => (
-                        <ListGroup.Item ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                        <ListGroup.Item
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
                           <Form.Check
                             type="checkbox"
                             label={col.label}

@@ -1,10 +1,18 @@
+// src/components/SearchHelp/index.js
+
 import React, { useState, useEffect } from "react";
 import { Modal } from "react-bootstrap";
-import Opervex from "../../utils/Opervex";
+import Opervex from "../../Opervex";
 import FilterAccordion from "../Filter/FilterAccordion";
 import SearchHelpTable from "./SearchHelpTable";
 
-const SearchHelp = ({ showModal, setShowModal, onSelectItem, urlData, urlSchema }) => {
+const SearchHelp = ({
+  showModal,
+  setShowModal,
+  onSelectItem,
+  urlData,
+  urlSchema,
+}) => {
   const [data, setData] = useState([]);
   const [layout, setLayout] = useState(null);
 
@@ -18,9 +26,11 @@ const SearchHelp = ({ showModal, setShowModal, onSelectItem, urlData, urlSchema 
 
   const getSchema = async () => {
     try {
-      setLayout(await Opervex.API.get(urlSchema));
+      const _layout = await Opervex.API.get(urlSchema);
+
+      if (_layout?.error) setLayout([]);
+      else setLayout(_layout);
     } catch (err) {
-      console.log("Erro ao carregar os dados:", err);
       setLayout([]);
     }
   };
@@ -31,10 +41,18 @@ const SearchHelp = ({ showModal, setShowModal, onSelectItem, urlData, urlSchema 
         <Modal.Title>Pesquisar</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <FilterAccordion layout={layout || []} setData={setData} urlData={urlData} />
+        <FilterAccordion
+          layout={layout || []}
+          setData={setData}
+          urlData={urlData}
+        />
 
         {/* Tabela Dinâmica */}
-        <SearchHelpTable layout={layout || []} data={data || []} onSelectItem={onSelectItem} />
+        <SearchHelpTable
+          layout={layout || []}
+          data={data || []}
+          onSelectItem={onSelectItem}
+        />
       </Modal.Body>
     </Modal>
   );

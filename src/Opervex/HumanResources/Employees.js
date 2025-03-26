@@ -1,3 +1,5 @@
+// src/Opervex/HumanResources/Employees.js
+
 class Employees {
   #_api; // Definição de campo privado
 

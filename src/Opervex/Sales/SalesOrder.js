@@ -1,3 +1,5 @@
+// src/Opervex/Sales/SalesOrder.js
+
 class SalesOrder {
   #_api; // Definição de campo privado
 

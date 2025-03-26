@@ -1,3 +1,5 @@
+// src/Opervex/MaterialMaster/Categories.js
+
 class Categories {
   #_api; // Definição de campo privado
 

@@ -1,4 +1,5 @@
-// components/DynamicReport/index.js
+// src/components/DynamicReport.js
+
 import React, { useState } from "react";
 import DynamicTable from "./DynamicTable"; // Importando DynamicTable
 import LayoutConfigMenu from "./LayoutConfigMenu"; // Importando LayoutConfigMenu
@@ -15,13 +16,23 @@ const DynamicReport = ({ reportName, urlData, urlSchema, links }) => {
     <>
       <div className="d-flex gap-2 mb-3">
         {/* Dialog de Filtros */}
-        <FilterDialog layout={layout || []} setData={setDados} urlData={urlData} setPage={setPage} />
+        <FilterDialog
+          layout={layout || []}
+          setData={setDados}
+          urlData={urlData}
+          setPage={setPage}
+        />
 
         {/* Export Excel*/}
         <ExportData data={dados} filename={reportName} />
 
         {/* Configuração de Layout */}
-        <LayoutConfigMenu layout={layout || []} setLayout={setLayout} layoutName={reportName} urlSchema={urlSchema} />
+        <LayoutConfigMenu
+          layout={layout || []}
+          setLayout={setLayout}
+          layoutName={reportName}
+          urlSchema={urlSchema}
+        />
       </div>
 
       {/* Tabela Dinâmica */}

@@ -1,3 +1,5 @@
+// src/pages/Register/SalesOrder.js
+
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import {
@@ -8,7 +10,6 @@ import {
   InputGroup,
   Card,
   Button,
-  Alert,
 } from "react-bootstrap";
 import { FaSearch, FaPlus, FaSave, FaPencilAlt } from "react-icons/fa";
 import { MdOutlineCancel } from "react-icons/md";
@@ -16,7 +17,7 @@ import { MdOutlineCancel } from "react-icons/md";
 import CurrencyInput from "../../components/CurrencyInput";
 import { useAuth } from "../../context/AuthContext";
 import SearchHelp from "../../components/SearchHelp";
-import Opervex from "../../utils/Opervex";
+import Opervex from "../../Opervex";
 import CustomAlert from "../../components/CustomAlert";
 
 const rolePageRequire = "SALES_ORDER";

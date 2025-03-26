@@ -1,3 +1,5 @@
+// src/pages/Register/Product.js
+
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import {
@@ -23,7 +25,7 @@ import { MdOutlineCancel } from "react-icons/md";
 
 import { useAuth } from "../../context/AuthContext";
 import SearchHelp from "../../components/SearchHelp";
-import Opervex from "../../utils/Opervex";
+import Opervex from "../../Opervex";
 
 const rolePageRequire = "PRODUCTS";
 

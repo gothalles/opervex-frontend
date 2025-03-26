@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+// src/components/FilterDialog.js
+
+import React, { useState } from "react";
 import { Modal, Button, Form, InputGroup } from "react-bootstrap";
-import { useAuth } from "../context/AuthContext";
 import CurrencyInput from "../components/CurrencyInput";
-import Opervex from "../utils/Opervex";
+import Opervex from "../Opervex";
 
 const LOGIC_OPERATORS = [
   { label: "E", value: "AND" },
@@ -13,7 +14,6 @@ const FilterDialog = ({ layout, setData, urlData, setPage }) => {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState([]);
-  const { user } = useAuth();
 
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
@@ -21,7 +21,10 @@ const FilterDialog = ({ layout, setData, urlData, setPage }) => {
   const handleAddFilter = () => {
     const fieldname = layout.filter((col) => col.visible)[0].key;
 
-    setFilters((prev) => [...prev, { field: "", operator: "=", value: "", logic: prev.length ? "AND" : "" }]);
+    setFilters((prev) => [
+      ...prev,
+      { field: "", operator: "=", value: "", logic: prev.length ? "AND" : "" },
+    ]);
 
     handleChangeFilter(filters.length, "field", fieldname);
   };
@@ -31,19 +34,25 @@ const FilterDialog = ({ layout, setData, urlData, setPage }) => {
   };
 
   const handleChangeFilter = (index, key, value) => {
-    setFilters((prev) => prev.map((filter, i) => (i === index ? { ...filter, [key]: value } : filter)));
+    setFilters((prev) =>
+      prev.map((filter, i) =>
+        i === index ? { ...filter, [key]: value } : filter
+      )
+    );
   };
 
   const handleFiltrar = async () => {
     setLoading(true);
 
     const validFilters = filters.filter((f) => f.field);
-    const filterBody = validFilters.map(({ field, operator, value, logic }, index) => ({
-      operation: index === 0 ? "AND" : logic,
-      field,
-      condition: operator,
-      value,
-    }));
+    const filterBody = validFilters.map(
+      ({ field, operator, value, logic }, index) => ({
+        operation: index === 0 ? "AND" : logic,
+        field,
+        condition: operator,
+        value,
+      })
+    );
 
     try {
       const result = await Opervex.API.post(urlData, filterBody);
@@ -72,7 +81,12 @@ const FilterDialog = ({ layout, setData, urlData, setPage }) => {
           {filters.map((filter, index) => (
             <InputGroup className="mb-2" key={index}>
               {index > 0 && (
-                <Form.Select value={filter.logic} onChange={(e) => handleChangeFilter(index, "logic", e.target.value)}>
+                <Form.Select
+                  value={filter.logic}
+                  onChange={(e) =>
+                    handleChangeFilter(index, "logic", e.target.value)
+                  }
+                >
                   {LOGIC_OPERATORS.map((op) => (
                     <option key={op.value} value={op.value}>
                       {op.label}
@@ -80,7 +94,12 @@ const FilterDialog = ({ layout, setData, urlData, setPage }) => {
                   ))}
                 </Form.Select>
               )}
-              <Form.Select value={filter.field} onChange={(e) => handleChangeFilter(index, "field", e.target.value)}>
+              <Form.Select
+                value={filter.field}
+                onChange={(e) =>
+                  handleChangeFilter(index, "field", e.target.value)
+                }
+              >
                 {layout
                   .filter((col) => col.visible)
                   .map((col) => (
@@ -89,29 +108,50 @@ const FilterDialog = ({ layout, setData, urlData, setPage }) => {
                     </option>
                   ))}
               </Form.Select>
-              <Form.Select value={filter.operator} onChange={(e) => handleChangeFilter(index, "operator", e.target.value)}>
-                {(layout.find((col) => col.key === filter.field)?.filterOptions ?? []).map((op) => (
+              <Form.Select
+                value={filter.operator}
+                onChange={(e) =>
+                  handleChangeFilter(index, "operator", e.target.value)
+                }
+              >
+                {(
+                  layout.find((col) => col.key === filter.field)
+                    ?.filterOptions ?? []
+                ).map((op) => (
                   <option key={op.value} value={op.value}>
                     {op.label}
                   </option>
                 ))}
               </Form.Select>
-              {layout.find((col) => col.key === filter.field)?.type === "currency" ? (
-                <CurrencyInput value={filter.value} onChange={(value) => handleChangeFilter(index, "value", value)} />
+              {layout.find((col) => col.key === filter.field)?.type ===
+              "currency" ? (
+                <CurrencyInput
+                  value={filter.value}
+                  onChange={(value) =>
+                    handleChangeFilter(index, "value", value)
+                  }
+                />
               ) : (
                 <Form.Control
                   type={
-                    layout.find((col) => col.key === filter.field)?.type === "date"
+                    layout.find((col) => col.key === filter.field)?.type ===
+                    "date"
                       ? "date"
-                      : layout.find((col) => col.key === filter.field)?.type === "number"
+                      : layout.find((col) => col.key === filter.field)?.type ===
+                        "number"
                       ? "number"
                       : "text"
                   }
                   value={filter.value}
-                  onChange={(e) => handleChangeFilter(index, "value", e.target.value)}
+                  onChange={(e) =>
+                    handleChangeFilter(index, "value", e.target.value)
+                  }
                 />
               )}
-              <Button variant="danger" onClick={() => handleRemoveFilter(index)}>
+              <Button
+                variant="danger"
+                onClick={() => handleRemoveFilter(index)}
+              >
                 -
               </Button>
             </InputGroup>

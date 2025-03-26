@@ -1,3 +1,5 @@
+// src/Opervex/MaterialMaster/Products.js
+
 class Products {
   #_api; // Definição de campo privado
 

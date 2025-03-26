@@ -1,8 +1,11 @@
 // src/routes.js
+
 import Login from "./pages/Login";
 import Logout from "./pages/Logout";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
+
+import AccountingBranch from "./pages/Accounting/Branch";
 
 import RegisterServiceOrder from "./pages/Register/ServiceOrder";
 import RegisterService from "./pages/Register/Service";
@@ -22,7 +25,6 @@ export default [
     path: "/",
     private: true,
     component: <Home />,
-    role: "", // Se necessário
   },
   {
     path: "/Login",
@@ -136,5 +138,18 @@ export default [
     private: true,
     component: <RegisterSalesOrder />,
     role: "SALES_ORDER",
+  },
+  // Accounting - Branch
+  {
+    path: "/Accounting/Branch",
+    private: true,
+    component: <AccountingBranch />,
+    role: "BRANCH",
+  },
+  {
+    path: "/Accounting/Branch/:id",
+    private: true,
+    component: <AccountingBranch />,
+    role: "BRANCH",
   },
 ];

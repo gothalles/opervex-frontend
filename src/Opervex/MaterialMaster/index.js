@@ -1,4 +1,5 @@
-// src/utils/Opervex/MaterialMaster/index.js
+// src/Opervex/MaterialMaster/index.js
+
 import _products from "./Products";
 import _categories from "./Categories";
 

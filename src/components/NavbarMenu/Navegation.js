@@ -1,15 +1,19 @@
 // src/components/NavbarMenu/Navegation.js
 
 import { CiSettings } from "react-icons/ci";
-import { FaHome } from "react-icons/fa";
-import { MdOutlineSpaceDashboard, MdEmojiTransportation } from "react-icons/md";
+import { FaHome, FaBuilding } from "react-icons/fa";
+import {
+  MdOutlineSpaceDashboard,
+  MdEmojiTransportation,
+  MdOutlineAccountTree,
+} from "react-icons/md";
 import { RiShoppingCartLine } from "react-icons/ri";
 import { BiBarChart } from "react-icons/bi";
 import { AiOutlineFileText } from "react-icons/ai";
 
 export default [
   {
-    segment: "/",
+    segment: "",
     title: "Home",
     icon: <FaHome />,
   },
@@ -124,6 +128,19 @@ export default [
         segment: "AccessProfile",
         title: "Acessos",
         icon: <BiBarChart />,
+        command: "USER_PROFILE",
+      },
+    ],
+  },
+  {
+    segment: "Accounting",
+    title: "Contabilidade",
+    icon: <MdOutlineAccountTree />,
+    children: [
+      {
+        segment: "Branch",
+        title: "Empresa - Filial",
+        icon: <FaBuilding />,
         command: "USER_PROFILE",
       },
     ],

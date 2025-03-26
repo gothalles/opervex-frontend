@@ -1,6 +1,7 @@
 // src/context/AuthContext.js
+
 import { createContext, useContext, useEffect, useState } from "react";
-import OpervexAPI from "../utils/Opervex";
+import OpervexAPI from "../Opervex";
 import axios from "axios";
 
 export const AuthContext = createContext();

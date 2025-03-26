@@ -1,4 +1,5 @@
-// pages/Reports/StockSerial.js
+// src/pages/Reports/SockSerial.js
+
 import React from "react";
 import DynamicReport from "../../components/DynamicReport";
 

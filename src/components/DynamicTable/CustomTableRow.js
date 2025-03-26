@@ -1,3 +1,5 @@
+// src/components/DynamicTable/CustomTableRow.js
+
 import React from "react";
 import { FormCheck } from "react-bootstrap";
 import { Link } from "react-router-dom";

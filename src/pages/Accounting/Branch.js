@@ -1,4 +1,4 @@
-// src/pages/Register/Service.js
+// src/pages/Accounting/Branch.js
 
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
@@ -7,29 +7,26 @@ import {
   Row,
   Col,
   Form,
-  Table,
   InputGroup,
   Card,
   Button,
 } from "react-bootstrap";
+import formatCNPJ from "../../components/formatCNPJ";
 import { FaSearch, FaPlus, FaSave, FaPencilAlt } from "react-icons/fa";
 import { MdOutlineCancel } from "react-icons/md";
 
-import CurrencyInput from "../../components/CurrencyInput";
 import { useAuth } from "../../context/AuthContext";
 import SearchHelp from "../../components/SearchHelp";
 import Opervex from "../../Opervex";
 
-const rolePageRequire = "SERVICES";
+const rolePageRequire = "BRANCH";
 
 var dataDefault = {
   code: "",
   description: "",
-  text: "",
-  externalCode: "",
-  serviceType: null,
+  cnpj: "",
+  resale: false,
   disabled: false,
-  prices: [],
 };
 
 const actionsDefault = {
@@ -39,34 +36,17 @@ const actionsDefault = {
   save: true,
 };
 
-const Service = () => {
+const Branch = () => {
   const { roles, loading } = useAuth();
   const [showModal, setShowModal] = useState(false);
   const [disabledField, setDisabledField] = useState(true);
   const [actions, setActions] = useState(actionsDefault);
   const [data, setData] = useState(dataDefault);
-  const [branches, setBranches] = useState([]);
-  const [serviceTypes, setServiceTypes] = useState([]);
   const { id } = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
       commandAction({ ...actionsDefault, create: false });
-
-      setServiceTypes(await Opervex.ServiceManagement.ServiceType.findAll());
-
-      const fetchedBranches = await Opervex.Accounting.Branches.findAll();
-      setBranches(fetchedBranches);
-
-      const updatedPrices = fetchedBranches.map((branch) => ({
-        branch: branch.code,
-        description: branch.description,
-        points: 0,
-        price: 0,
-        priceResale: 0,
-      }));
-
-      dataDefault.prices = updatedPrices; // Se `dataDefault` for um estado, usar `setDataDefault({...dataDefault, prices: updatedPrices})`
 
       if (id) {
         await searchAPI(id);
@@ -186,26 +166,9 @@ const Service = () => {
 
     if (!id) return;
 
-    var result = await Opervex.ServiceManagement.Service.findId(id);
+    var result = await Opervex.Accounting.Branches.findId(id);
 
     if (result && !result.error) {
-      result.prices.forEach((price) => {
-        price.description = branches.find(
-          (x) => x.code === price.branch
-        )?.description;
-      });
-
-      branches.forEach((branch) => {
-        if (!result.prices.find((x) => x.branch === branch.code))
-          result.prices.push({
-            branch: branch.code,
-            description: branch.description,
-            points: 0,
-            price: 0,
-            priceResale: 0,
-          });
-      });
-
       setData(result);
       commandAction({ ...actionsDefault, create: false, change: false });
     } else {
@@ -213,17 +176,6 @@ const Service = () => {
       commandAction({ ...actionsDefault, create: false });
       alert(result.error);
     }
-  };
-
-  const handleChangePrices = (index, e) => {
-    const { name, value } = e.target;
-
-    setData((prev) => ({
-      ...prev,
-      prices: prev.prices.map((row, i) =>
-        i === index ? { ...row, [name]: value } : row
-      ),
-    }));
   };
 
   return (
@@ -316,8 +268,8 @@ const Service = () => {
                   </Form.Group>
                 </Col>
 
-                <Col md={2}>
-                  <Form.Check // prettier-ignore
+                <Col md={2} className="d-flex align-items-center">
+                  <Form.Check
                     type="checkbox"
                     id="disabled"
                     checked={data.disabled}
@@ -338,133 +290,30 @@ const Service = () => {
             <Card.Body>
               <Row className="mb-2">
                 <Col md={6}>
-                  <Form.Label>Texto</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={4}
-                    size="sm"
-                    value={data.text}
-                    disabled={disabledField}
-                    onChange={handleChange}
-                    name="text"
-                  />
-                </Col>
-                <Col md={2}></Col>
-                <Col md={4}>
                   <Form.Group>
-                    <Form.Label>Código Externo</Form.Label>
+                    <Form.Label>CNPJ</Form.Label>
                     <Form.Control
                       type="text"
                       size="sm"
-                      value={data?.externalCode}
+                      name="cnpj"
+                      value={formatCNPJ(data.cnpj)} // Make sure to include this
                       onChange={handleChange}
-                      name="externalCode"
                       disabled={disabledField}
                     />
                   </Form.Group>
-                  <Form.Group>
-                    <Form.Label>Tipo</Form.Label>
-                    <Form.Select
-                      size="sm"
-                      value={data.serviceType}
-                      onChange={handleChange}
-                      name="serviceType"
-                      disabled={disabledField}
-                    >
-                      <option value="">Selecione...</option>
-                      {serviceTypes.map((type) => (
-                        <option key={type.code} value={type.code}>
-                          {type.description}
-                        </option>
-                      ))}
-                    </Form.Select>
-                  </Form.Group>
                 </Col>
-              </Row>
-            </Card.Body>
-          </Card>
-
-          {/* ----- Prices -----*/}
-          <Card className="mb-2">
-            <Card.Header>
-              <h5>Preço do Serviço por Unidade</h5>
-            </Card.Header>
-            <Card.Body>
-              <Row className="mb-2">
-                <Table striped bordered hover size="sm">
-                  <thead>
-                    <tr className="text-center align-middle">
-                      <th>Unidade</th>
-                      <th>Descrição</th>
-                      <th>Pontos</th>
-                      <th>Preço</th>
-                      <th>Preço Revenda</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.prices.length > 0 ? (
-                      data.prices.map((price, index) => (
-                        <tr key={index}>
-                          <td>{price.branch}</td>
-                          <td>
-                            {
-                              branches.find((x) => x.code === price.branch)
-                                .description
-                            }
-                          </td>
-                          <td>
-                            {!disabledField ? (
-                              <Form.Control
-                                type="number"
-                                size="sm"
-                                value={price.points ? Number(price.points) : 0}
-                                onChange={(e) =>
-                                  handleChangePrices(index, {
-                                    target: {
-                                      name: "points",
-                                      value: parseInt(e.target.value, 10) || 0,
-                                    },
-                                  })
-                                }
-                                disabled={disabledField}
-                              />
-                            ) : (
-                              <>{price.points ? Number(price.points) : 0}</>
-                            )}
-                          </td>
-                          <td>
-                            <CurrencyInput
-                              value={price.price}
-                              onChange={(e) =>
-                                handleChangePrices(index, {
-                                  target: { name: "price", value: e },
-                                })
-                              }
-                              disabled={disabledField}
-                            />
-                          </td>
-                          <td>
-                            <CurrencyInput
-                              value={price.priceResale}
-                              onChange={(e) =>
-                                handleChangePrices(index, {
-                                  target: { name: "priceResale", value: e },
-                                })
-                              }
-                              disabled={disabledField}
-                            />
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan="5" className="text-center">
-                          Nenhum preço encontrada
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </Table>
+                <Col md={2} className="d-flex align-items-center">
+                  <Form.Check
+                    type="checkbox"
+                    id="resale"
+                    checked={data.resale}
+                    name="resale"
+                    onChange={handleChange}
+                    label="Revenda"
+                    disabled={disabledField}
+                  />
+                </Col>
+                <Col md={4}></Col>
               </Row>
             </Card.Body>
           </Card>
@@ -475,11 +324,11 @@ const Service = () => {
         showModal={showModal}
         setShowModal={setShowModal}
         onSelectItem={handleSelectItem}
-        urlData="/ServiceManagement/Service/SearchHelp"
-        urlSchema="/ServiceManagement/Service/SearchHelp/Schema"
+        urlData="/Accounting/Branches/SearchHelp"
+        urlSchema="/Accounting/Branches/SearchHelp/Schema"
       />
     </>
   );
 };
 
-export default Service;
+export default Branch;

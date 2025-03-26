@@ -1,4 +1,4 @@
-// src/utils/Opervex/System/UnitsMeasure.js
+// src/Opervex/System/UnitsMeasure.js
 
 class UnitsMeasure {
   #_api; // Definição de campo privado

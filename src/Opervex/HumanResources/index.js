@@ -1,4 +1,5 @@
-// src/utils/Opervex/HumanResources/index.js
+// src/Opervex/HumanResources/index.js
+
 import _employees from "./Employees";
 
 class HumanResources {

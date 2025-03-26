@@ -1,3 +1,5 @@
+// src/pages/Home.js
+
 import { Container, Row } from "react-bootstrap";
 
 const Home = () => {

@@ -1,4 +1,5 @@
-// src/utils/Opervex/Cities.js
+// src/Opervex/Accounting/Cities.js
+
 class Cities {
   constructor(api) {
     this._api = api; // Assign the API instance to the class property

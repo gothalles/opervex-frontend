@@ -1,4 +1,5 @@
-// pages/Reports/GoodsMovementFull.js
+// src/pages/Reports/GoodsMovementFull.js
+
 import React from "react";
 import DynamicReport from "../../components/DynamicReport";
 

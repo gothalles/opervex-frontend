@@ -1,4 +1,4 @@
-// src/utils/Opervex/System/UnitsMeasure.js
+// src/Opervex/System/TelephoneOperator.js
 
 class TelephoneOperator {
   #_api; // Definição de campo privado

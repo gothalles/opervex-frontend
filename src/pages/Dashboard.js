@@ -1,3 +1,5 @@
+// src/pages/Dashboard.js
+
 import { Container } from "react-bootstrap";
 
 const Dashboard = () => {

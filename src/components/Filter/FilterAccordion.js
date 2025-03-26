@@ -1,8 +1,10 @@
+// src/components/Filter/FilterAccordion.js
+
 import React, { useState } from "react";
 import { Button, Form, InputGroup, Accordion, Row } from "react-bootstrap";
 import { FaTrash } from "react-icons/fa";
 import CurrencyInput from "../../components/CurrencyInput";
-import Opervex from "../../utils/Opervex";
+import Opervex from "../../Opervex";
 
 const LOGIC_OPERATORS = [
   { label: "E", value: "AND" },
@@ -14,9 +16,14 @@ const FilterAccordion = ({ layout, setData, urlData }) => {
   const [filters, setFilters] = useState([]);
 
   const handleAddFilter = () => {
+    if (layout) return;
+
     const fieldname = layout.filter((col) => col.visible)[0].key;
 
-    setFilters((prev) => [...prev, { field: "", operator: "=", value: "", logic: prev.length ? "AND" : "" }]);
+    setFilters((prev) => [
+      ...prev,
+      { field: "", operator: "=", value: "", logic: prev.length ? "AND" : "" },
+    ]);
 
     handleChangeFilter(filters.length, "field", fieldname);
   };
@@ -26,19 +33,25 @@ const FilterAccordion = ({ layout, setData, urlData }) => {
   };
 
   const handleChangeFilter = (index, key, value) => {
-    setFilters((prev) => prev.map((filter, i) => (i === index ? { ...filter, [key]: value } : filter)));
+    setFilters((prev) =>
+      prev.map((filter, i) =>
+        i === index ? { ...filter, [key]: value } : filter
+      )
+    );
   };
 
   const handleFiltrar = async () => {
     setLoading(true);
 
     const validFilters = filters.filter((f) => f.field);
-    const filterBody = validFilters.map(({ field, operator, value, logic }, index) => ({
-      operation: index === 0 ? "AND" : logic,
-      field,
-      condition: operator,
-      value,
-    }));
+    const filterBody = validFilters.map(
+      ({ field, operator, value, logic }, index) => ({
+        operation: index === 0 ? "AND" : logic,
+        field,
+        condition: operator,
+        value,
+      })
+    );
 
     try {
       const result = await Opervex.API.post(urlData, filterBody);
@@ -60,7 +73,12 @@ const FilterAccordion = ({ layout, setData, urlData }) => {
             {filters.map((filter, index) => (
               <InputGroup className="mb-2" key={index} size="sm">
                 {index > 0 && (
-                  <Form.Select value={filter.logic} onChange={(e) => handleChangeFilter(index, "logic", e.target.value)}>
+                  <Form.Select
+                    value={filter.logic}
+                    onChange={(e) =>
+                      handleChangeFilter(index, "logic", e.target.value)
+                    }
+                  >
                     {LOGIC_OPERATORS.map((op) => (
                       <option key={op.value} value={op.value}>
                         {op.label}
@@ -68,7 +86,12 @@ const FilterAccordion = ({ layout, setData, urlData }) => {
                     ))}
                   </Form.Select>
                 )}
-                <Form.Select value={filter.field} onChange={(e) => handleChangeFilter(index, "field", e.target.value)}>
+                <Form.Select
+                  value={filter.field}
+                  onChange={(e) =>
+                    handleChangeFilter(index, "field", e.target.value)
+                  }
+                >
                   {layout
                     .filter((col) => col.visible)
                     .map((col) => (
@@ -77,39 +100,70 @@ const FilterAccordion = ({ layout, setData, urlData }) => {
                       </option>
                     ))}
                 </Form.Select>
-                <Form.Select value={filter.operator} onChange={(e) => handleChangeFilter(index, "operator", e.target.value)}>
-                  {(layout.find((col) => col.key === filter.field)?.filterOptions ?? []).map((op) => (
+                <Form.Select
+                  value={filter.operator}
+                  onChange={(e) =>
+                    handleChangeFilter(index, "operator", e.target.value)
+                  }
+                >
+                  {(
+                    layout.find((col) => col.key === filter.field)
+                      ?.filterOptions ?? []
+                  ).map((op) => (
                     <option key={op.value} value={op.value}>
                       {op.label}
                     </option>
                   ))}
                 </Form.Select>
-                {layout.find((col) => col.key === filter.field)?.type === "currency" ? (
-                  <CurrencyInput value={filter.value} onChange={(value) => handleChangeFilter(index, "value", value)} />
+                {layout.find((col) => col.key === filter.field)?.type ===
+                "currency" ? (
+                  <CurrencyInput
+                    value={filter.value}
+                    onChange={(value) =>
+                      handleChangeFilter(index, "value", value)
+                    }
+                  />
                 ) : (
                   <Form.Control
                     type={
-                      layout.find((col) => col.key === filter.field)?.type === "date"
+                      layout.find((col) => col.key === filter.field)?.type ===
+                      "date"
                         ? "date"
-                        : layout.find((col) => col.key === filter.field)?.type === "number"
+                        : layout.find((col) => col.key === filter.field)
+                            ?.type === "number"
                         ? "number"
                         : "text"
                     }
                     value={filter.value}
-                    onChange={(e) => handleChangeFilter(index, "value", e.target.value)}
+                    onChange={(e) =>
+                      handleChangeFilter(index, "value", e.target.value)
+                    }
                   />
                 )}
-                <InputGroup.Text size="sm" type="button" onClick={() => handleRemoveFilter(index)}>
+                <InputGroup.Text
+                  size="sm"
+                  type="button"
+                  onClick={() => handleRemoveFilter(index)}
+                >
                   <FaTrash />
                 </InputGroup.Text>
               </InputGroup>
             ))}
             <Row className="mb-2"></Row>
             <div className="text-end mb-2">
-              <Button variant="outline-success" onClick={handleAddFilter} size="sm">
+              <Button
+                variant="outline-success"
+                onClick={handleAddFilter}
+                size="sm"
+              >
                 Adicionar Filtro
               </Button>{" "}
-              <Button variant="primary" onClick={handleFiltrar} disabled={loading} size="sm">
+              <Button
+                variant="primary"
+                onClick={handleFiltrar}
+                disabled={!layout || layout?.length == 0 || loading}
+                size="sm"
+              >
                 {loading ? "Carregando..." : "Filtrar"}
               </Button>
             </div>
