@@ -16,7 +16,7 @@ const FilterAccordion = ({ layout, setData, urlData }) => {
   const [filters, setFilters] = useState([]);
 
   const handleAddFilter = () => {
-    if (layout) return;
+    if (!layout) return;
 
     const fieldname = layout.filter((col) => col.visible)[0].key;
 

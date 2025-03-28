@@ -56,9 +56,10 @@ export const AuthProvider = ({ children }) => {
 
         setUser(userData);
 
-        const rolesUser = await OpervexAPI.API.get(
-          `/System/Users/${data.id}/Profile`
+        const rolesUser = await OpervexAPI.System.UserProfile.findUserId(
+          data.id
         );
+
         localStorage.setItem("roles", JSON.stringify(rolesUser));
         setRoles(rolesUser);
 

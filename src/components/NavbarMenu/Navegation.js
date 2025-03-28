@@ -59,6 +59,12 @@ export default [
         icon: <AiOutlineFileText />,
         command: "SERVICES",
       },
+      {
+        segment: "Category",
+        title: "Categorias",
+        icon: <AiOutlineFileText />,
+        command: "CATEGORIES",
+      },
     ],
   },
   {

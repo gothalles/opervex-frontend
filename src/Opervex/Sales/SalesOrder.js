@@ -1,7 +1,7 @@
 // src/Opervex/Sales/SalesOrder.js
 
 class SalesOrder {
-  #_api; // Definição de campo privado
+  #_api;
 
   constructor(api) {
     this.#_api = api;

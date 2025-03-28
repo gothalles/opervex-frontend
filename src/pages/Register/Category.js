@@ -1,4 +1,4 @@
-// src/pages/Accounting/Branch.js
+// src/pages/Register/Category.js
 
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
@@ -13,19 +13,18 @@ import {
 } from "react-bootstrap";
 import { FaSearch, FaPlus, FaSave, FaPencilAlt } from "react-icons/fa";
 import { MdOutlineCancel } from "react-icons/md";
-import MaskedFormControl from "react-bootstrap-maskedinput";
 
 import { useAuth } from "../../context/AuthContext";
 import SearchHelp from "../../components/SearchHelp";
 import Opervex from "../../Opervex";
 
-const rolePageRequire = "BRANCH";
+const rolePageRequire = "CATEGORIES";
 
 var dataDefault = {
   code: "",
   description: "",
-  cnpj: "",
-  resale: false,
+  subcategory: false,
+  categoryTop: null,
   disabled: false,
 };
 
@@ -36,11 +35,12 @@ const actionsDefault = {
   save: true,
 };
 
-const Branch = () => {
+const Category = () => {
   const { roles, loading } = useAuth();
   const [showModal, setShowModal] = useState(false);
   const [disabledField, setDisabledField] = useState(true);
   const [actions, setActions] = useState(actionsDefault);
+  const [categories, setCategories] = useState([]);
   const [data, setData] = useState(dataDefault);
   const { id } = useParams();
 
@@ -48,9 +48,9 @@ const Branch = () => {
     const fetchData = async () => {
       commandAction({ ...actionsDefault, create: false });
 
-      if (id) {
-        await searchAPI(id);
-      }
+      setCategories(await Opervex.MaterialMaster.Categories.findAll());
+
+      if (id) await searchAPI(id);
     };
 
     fetchData();
@@ -92,7 +92,21 @@ const Branch = () => {
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
-    var newData = { ...data, [name]: type === "checkbox" ? checked : value };
+    var newData = { ...data };
+
+    switch (name) {
+      case "categoryTop":
+        newData.categoryTop = Number(value);
+        break;
+      case "subcategory":
+        newData.subcategory = checked;
+
+        if (!newData.subcategory) newData.categoryTop = null;
+        break;
+      default:
+        newData = { ...newData, [name]: type === "checkbox" ? checked : value };
+        break;
+    }
 
     setData(newData);
   };
@@ -117,13 +131,12 @@ const Branch = () => {
   const handleButtonSave = async () => {
     var body = { ...data };
 
-    body.cnpj = body.cnpj
-      .replaceAll(".", "")
-      .replaceAll("-", "")
-      .replaceAll("/", "");
-
     if (data.code) {
-      const result = await Opervex.Accounting.Branches.update(body.code, body);
+      const result = await Opervex.MaterialMaster.Categories.update(
+        body.code,
+        body
+      );
+
       if (result.error) {
         alert(result.error);
         return;
@@ -131,9 +144,9 @@ const Branch = () => {
 
       await searchAPI(data.code);
 
-      alert("Empresa/Filial atualizada com sucesso!");
+      alert("Registro atualizado com sucesso!");
     } else {
-      const result = await Opervex.Accounting.Branches.create(body);
+      const result = await Opervex.MaterialMaster.Categories.create(body);
       if (result.error) {
         alert(result.error);
         return;
@@ -141,7 +154,7 @@ const Branch = () => {
 
       await searchAPI(result.id);
 
-      alert("Empresa/Filial criada com sucesso!");
+      alert("Registro criado com sucesso!");
     }
   };
 
@@ -159,8 +172,8 @@ const Branch = () => {
 
     if (!id) return;
 
-    var result = await Opervex.Accounting.Branches.findId(id);
-
+    var result = await Opervex.MaterialMaster.Categories.findId(id);
+    console.log(result);
     if (result && !result.error) {
       setData(result);
       commandAction({ ...actionsDefault, create: false, change: false });
@@ -254,6 +267,7 @@ const Branch = () => {
                       type="text"
                       size="sm"
                       name="description"
+                      maxLength={30}
                       value={data.description}
                       onChange={handleChange}
                       disabled={disabledField}
@@ -282,32 +296,42 @@ const Branch = () => {
             </Card.Header>
             <Card.Body>
               <Row className="mb-2">
-                <Col md={6}>
-                  <Form.Group>
-                    <Form.Label>CNPJ</Form.Label>
-                    <MaskedFormControl
-                      type="text"
-                      size="sm"
-                      mask="11.111.111/1111-11"
-                      name="cnpj"
-                      value={data.cnpj} // Make sure to include this
-                      onChange={handleChange}
-                      disabled={disabledField}
-                    />
-                  </Form.Group>
-                </Col>
                 <Col md={2} className="d-flex align-items-center">
                   <Form.Check
                     type="checkbox"
-                    id="resale"
-                    checked={data.resale}
-                    name="resale"
+                    id="subcategory"
+                    checked={data.subcategory}
+                    name="subcategory"
                     onChange={handleChange}
-                    label="Revenda"
+                    label="Subcategoria"
                     disabled={disabledField}
                   />
+                  <Col md={10}></Col>
                 </Col>
-                <Col md={4}></Col>
+              </Row>
+              <Row className="mb-2">
+                <Col md={6}>
+                  <Form.Group>
+                    <Form.Label>Categoria</Form.Label>
+                    <Form.Select
+                      size="sm"
+                      value={data.categoryTop ? data.categoryTop : 0}
+                      onChange={handleChange}
+                      name="categoryTop"
+                      disabled={disabledField || !data.subcategory}
+                    >
+                      <option value={0}>Selecione...</option>
+                      {categories
+                        .filter((x) => x.code !== data.code)
+                        .map((category) => (
+                          <option key={category.code} value={category.code}>
+                            {category.description}
+                          </option>
+                        ))}
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+                <Col md={6}></Col>
               </Row>
             </Card.Body>
           </Card>
@@ -318,11 +342,11 @@ const Branch = () => {
         showModal={showModal}
         setShowModal={setShowModal}
         onSelectItem={handleSelectItem}
-        urlData="/Accounting/Branches/SearchHelp"
-        urlSchema="/Accounting/Branches/SearchHelp/Schema"
+        urlData="/MaterialMaster/Categories/SearchHelp"
+        urlSchema="/MaterialMaster/Categories/SearchHelp/Schema"
       />
     </>
   );
 };
 
-export default Branch;
+export default Category;

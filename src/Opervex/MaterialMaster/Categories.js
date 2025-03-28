@@ -14,6 +14,14 @@ class Categories {
   async findAll() {
     return this.#_api.get("/MaterialMaster/Categories");
   }
+
+  async update(id, data) {
+    return this.#_api.put("/MaterialMaster/Categories/" + id, data);
+  }
+
+  async create(data) {
+    return this.#_api.post("/MaterialMaster/Categories/", data);
+  }
 }
 
 // Export the class itself (not an instance)

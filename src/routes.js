@@ -5,12 +5,15 @@ import Logout from "./pages/Logout";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 
+import SystemAccessProfile from "./pages/System/AccessProfile";
+
 import AccountingBranch from "./pages/Accounting/Branch";
 
 import RegisterServiceOrder from "./pages/Register/ServiceOrder";
 import RegisterService from "./pages/Register/Service";
 import RegisterProduct from "./pages/Register/Product";
 import RegisterSalesOrder from "./pages/Register/SalesOrder";
+import RegisterCategory from "./pages/Register/Category";
 
 import ReportStock from "./pages/Reports/Stock";
 import ReportStockSerial from "./pages/Reports/SockSerial";
@@ -99,6 +102,20 @@ export default [
     component: <RegisterProduct />,
     role: "PRODUCTS",
   },
+
+  // Register - Category
+  {
+    path: "/Register/Category",
+    private: true,
+    component: <RegisterCategory />,
+    role: "CATEGORIES",
+  },
+  {
+    path: "/Register/Category/:id",
+    private: true,
+    component: <RegisterCategory />,
+    role: "CATEGORIES",
+  },
   // Register - Service Order
   {
     path: "/Register/ServiceOrder",
@@ -139,6 +156,21 @@ export default [
     component: <RegisterSalesOrder />,
     role: "SALES_ORDER",
   },
+
+  // System - AccessProfile
+  {
+    path: "/System/AccessProfile",
+    private: true,
+    component: <SystemAccessProfile />,
+    role: "USER_PROFILE",
+  },
+  {
+    path: "/System/AccessProfile/:id",
+    private: true,
+    component: <SystemAccessProfile />,
+    role: "USER_PROFILE",
+  },
+
   // Accounting - Branch
   {
     path: "/Accounting/Branch",
