@@ -138,7 +138,6 @@ const SalesOrder = () => {
       }
 
       await searchAPI(result.id);
-      setData(dataDefault);
       alert("Venda criada com sucesso!");
     }
 
